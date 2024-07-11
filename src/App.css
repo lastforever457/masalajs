@@ -88,18 +88,17 @@ section {
 }
 
 #comment-accordion > li {
-    height: 5vw;
     background: transparent;
 }
 
 #comment-accordion > li input {
-    width: calc(100% - 70px);
     color: #fff;
     background: transparent;
     border: 1px solid gray;
     caret-color: #fff;
 }
 
-.add-comment-wrapper{
-    height: 300px;
+
+#comment-accordion > li input::placeholder {
+    color: gainsboro;
 }

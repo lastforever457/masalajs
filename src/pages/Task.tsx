@@ -1,13 +1,14 @@
 import Editor, {Monaco} from "@monaco-editor/react";
 import confetti from "canvas-confetti";
-import {useEffect, useRef, useState} from "react";
+import React, {MouseEvent, useEffect, useRef, useState} from "react";
 import {IoCheckmarkDoneCircle} from "react-icons/io5";
 import axios from "axios";
 import {Link} from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
-import Comment from "../Functions/Comment.tsx";
+import Comment from "../Functions/Comment";
+import useComments from "../Functions/UseComments";
 
 interface ITask {
     id: number;
@@ -20,6 +21,15 @@ interface ITask {
     answers: number[];
 }
 
+interface IUser {
+    name: string;
+    email: string;
+    password: string;
+    role: string;
+    id: number;
+    results: { [key: string]: boolean };
+}
+
 interface IComment {
     userName: string;
     comment: string;
@@ -27,11 +37,10 @@ interface IComment {
 
 const Task: React.FC = () => {
     const [task, setTask] = useState<ITask | null>(null);
-    const [comments, setComments] = useState<IComment[]>([]);
+    const taskId = parseInt(localStorage.getItem("taskId") || "", 10);
+    const {comments, getComments} = useComments(taskId);
     const [code, setCode] = useState<string>("");
     const [results, setResults] = useState<string[]>([]);
-
-    const taskId = parseInt(localStorage.getItem("taskId") || "", 10);
     const editorRef = useRef<any>(null);
 
     useEffect(() => {
@@ -50,12 +59,13 @@ const Task: React.FC = () => {
     useEffect(() => {
         if (task) {
             const newDefaultCode = `function ${task.fun_name} {
-        // Write your code here
-      }`;
+                // Write your code here
+            }`;
             setCode(newDefaultCode);
             setResults([]);
+            getComments(task.id); // Fetch comments whenever the task is set
         }
-    }, [task]);
+    }, [task, getComments]);
 
     const showValue = (value: string | undefined) => {
         setCode(value || "");
@@ -134,47 +144,37 @@ const Task: React.FC = () => {
 
     const breadcrumbs = [
         <Link className="fs-4 text-secondary text-decoration-none" key="1" to="/">
-            Home
+            Bosh sahifa
         </Link>,
         <Link className="fs-4 text-secondary text-decoration-none" key="2" to="/tasks">
-            Tasks
+            Vazifalar
         </Link>,
         <Typography className="fs-5 text-light" key="3">
             {capitalizedFunctionName}
         </Typography>,
     ];
 
-    useEffect(() => {
-        const fetchComments = async () => {
-            try {
-                const res = await axios.get(`https://f7f2aac439c74f02.mokky.dev/comments?taskId=${taskId}`);
-                setComments(res.data);
-            } catch (error) {
-                console.error(error);
-            }
-        };
-
-        fetchComments();
-    }, [taskId]);
-
-    const handleAddComment = async (event: Event) => {
+    const handleAddComment = async (event: React.MouseEvent<HTMLButtonElement>) => {
         event.preventDefault();
-        const input: HTMLInputElement | null = document.querySelector("#add-comment").value;
+
         try {
-            let user = localStorage.getItem("token")
-            user = JSON.parse(user)
-            if (input && user) {
-                const res = await axios.post("https://f7f2aac439c74f02.mokky.dev/comments", {
+            const input = document.querySelector<HTMLInputElement>("#add-comment-input");
+            if (!input) return;
+            const user = localStorage.getItem("token");
+            if (input.value && user) {
+                const parsedUser: IUser = JSON.parse(user);
+                await axios.post("https://f7f2aac439c74f02.mokky.dev/comments", {
                     taskId: taskId,
-                    userName: user.name,
-                    comment: input,
+                    userName: parsedUser.name,
+                    comment: input.value,
                 });
-                console.log(res)
+                getComments(taskId); // Refresh comments after adding a new one
             }
+            input.value = "";
         } catch (error) {
             console.error(error);
         }
-    }
+    };
 
     return (
         <section className="container py-3">
@@ -268,11 +268,13 @@ const Task: React.FC = () => {
                             <div className="accordion-body">
                                 <ul id="comment-accordion" className="list-group list-group-flush">
                                     <li className="list-group-item add-comment-wrapper">
-                                        <div
-                                            className="input-group add-comment-wrapper d-flex justify-content-between align-items-center">
-                                            <input id="add-comment" type="text" className="form-control"/>
+                                        <div className="input-group mb-3">
+                                            <input type="text" className="form-control" id="add-comment-input"
+                                                   placeholder="Xabaringizni yozing" aria-label="Xabaringizni yozing"
+                                                   aria-describedby="add-comment-btn"/>
                                             <button onClick={handleAddComment}
-                                                    className="btn btn-outline-light">Yozish
+                                                    className="btn btn-outline-light input-group-text"
+                                                    id="add-comment-btn">Yozish
                                             </button>
                                         </div>
                                     </li>
