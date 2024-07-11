@@ -1,0 +1,88 @@
+@import url("https://fonts.googleapis.com/css2?family=Baloo+Chettan+2:wght@400..800&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Baloo Chettan 2", sans-serif;
+}
+
+body {
+    width: 100%;
+    min-height: 100vh;
+    background-color: #1f1f2b;
+}
+
+section {
+    width: 100%;
+    min-height: 100vh;
+}
+
+#main-title {
+    font-size: 50px;
+    color: #fff;
+    cursor: pointer;
+}
+
+#main-title:hover {
+    font-size: 50px;
+    color: #ffd700;
+}
+
+.department-card {
+    min-height: 170px;
+    background-color: #303041;
+    border-radius: 20px;
+    cursor: pointer;
+    color: #fff;
+    transition: 0.3s ease;
+}
+
+.department-card:hover {
+    color: #ffd700;
+}
+
+.department-progress {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.department-progress:hover {
+    color: #ffd700;
+}
+
+.tasks-card {
+    min-height: 70px;
+    background-color: #303041;
+    border-radius: 20px;
+    cursor: pointer;
+    color: #fff;
+    transition: 0.3s ease;
+}
+
+.tasks-card:hover {
+    color: #ffd700;
+}
+
+.codeground {
+    height: 40vh;
+    overflow: hidden;
+}
+
+.login-tab {
+    min-width: 100px;
+    min-height: 40px;
+    border: none;
+    box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.1);
+    background: transparent;
+    color: #fff;
+}
+
+.login-tab.base--selected {
+    box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.2);
+    border-bottom: 1px solid #fff;
+}
