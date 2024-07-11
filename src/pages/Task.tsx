@@ -157,6 +157,25 @@ const Task: React.FC = () => {
         fetchComments();
     }, [taskId]);
 
+    const handleAddComment = async (event: Event) => {
+        event.preventDefault();
+        const input: HTMLInputElement | null = document.querySelector("#add-comment").value;
+        try {
+            let user = localStorage.getItem("token")
+            user = JSON.parse(user)
+            if (input && user) {
+                const res = await axios.post("https://f7f2aac439c74f02.mokky.dev/comments", {
+                    taskId: taskId,
+                    userName: user.name,
+                    comment: input,
+                });
+                console.log(res)
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     return (
         <section className="container py-3">
             <p id="main-title" className="p-0 m-0">
@@ -247,7 +266,16 @@ const Task: React.FC = () => {
                             data-bs-parent="#accordionFlushExample"
                         >
                             <div className="accordion-body">
-                                <ul className="list-group list-group-flush">
+                                <ul id="comment-accordion" className="list-group list-group-flush">
+                                    <li className="list-group-item add-comment-wrapper">
+                                        <div
+                                            className="input-group add-comment-wrapper d-flex justify-content-between align-items-center">
+                                            <input id="add-comment" type="text" className="form-control"/>
+                                            <button onClick={handleAddComment}
+                                                    className="btn btn-outline-light">Yozish
+                                            </button>
+                                        </div>
+                                    </li>
                                     {comments.map((cmt, index) => (
                                         <Comment key={index} userName={cmt.userName} comment={cmt.comment}/>
                                     ))}

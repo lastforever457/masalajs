@@ -5,9 +5,9 @@ interface IComment {
 
 function Comment(props: IComment) {
     return (
-        <li className="list-group-item">
-            <h4>${props.userName}</h4>
-            <p>{props.comment}</p>
+        <li className="d-flex align-items-center gap-3 list-group-item bg-transparent text-light">
+            <h4 className="p-0 m-0">{props.userName}:</h4>
+            <p className="p-0 m-0">{props.comment}</p>
         </li>
     );
 }

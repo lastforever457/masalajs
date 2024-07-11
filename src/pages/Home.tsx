@@ -86,12 +86,7 @@ function Home() {
                                 <div className="col-sm-6 department-progress-wrapper position-relative">
                                     <div
                                         className="department-progress"
-                                        style={
-                                            {
-                                                "--i": 85,
-                                                "--clr": "#fff",
-                                            } as React.CSSProperties
-                                        }
+                                        
                                     >
                                         <h3>
                                             {progress}

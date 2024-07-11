@@ -86,3 +86,20 @@ section {
     box-shadow: 0 0 5px 5px rgba(0, 0, 0, 0.2);
     border-bottom: 1px solid #fff;
 }
+
+#comment-accordion > li {
+    height: 5vw;
+    background: transparent;
+}
+
+#comment-accordion > li input {
+    width: calc(100% - 70px);
+    color: #fff;
+    background: transparent;
+    border: 1px solid gray;
+    caret-color: #fff;
+}
+
+.add-comment-wrapper{
+    height: 300px;
+}
