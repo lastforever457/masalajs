@@ -7,48 +7,51 @@ import {Link} from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import Comment from "../Functions/Comment.tsx";
 
 interface ITask {
-    id: number,
-    departmentId: number,
-    text: string,
-    examples: string[],
-    fun_name: string,
-    solved: boolean,
-    check: string[],
-    answers: number[]
+    id: number;
+    departmentId: number;
+    text: string;
+    examples: string[];
+    fun_name: string;
+    solved: boolean;
+    check: string[];
+    answers: number[];
 }
 
-function Task() {
+interface IComment {
+    userName: string;
+    comment: string;
+}
+
+const Task: React.FC = () => {
     const [task, setTask] = useState<ITask | null>(null);
+    const [comments, setComments] = useState<IComment[]>([]);
+    const [code, setCode] = useState<string>("");
+    const [results, setResults] = useState<string[]>([]);
 
     const taskId = parseInt(localStorage.getItem("taskId") || "", 10);
+    const editorRef = useRef<any>(null);
 
     useEffect(() => {
-        const fetchTasks = async () => {
+        const fetchTask = async () => {
             try {
                 const res = await axios.get(`https://f7f2aac439c74f02.mokky.dev/tasks?id=${taskId}`);
                 setTask(res.data[0]);
             } catch (error) {
-                console.error('Error fetching the task:', error);
+                console.error("Error fetching the task:", error);
             }
-        }
-        fetchTasks();
+        };
+
+        fetchTask();
     }, [taskId]);
-
-    const editorRef = useRef<any>(null);
-    const defaultCode = `function ${task ? task.fun_name : ""} {
-    // Write your code here
-}`;
-
-    const [code, setCode] = useState(defaultCode);
-    const [results, setResults] = useState<string[]>([]);
 
     useEffect(() => {
         if (task) {
             const newDefaultCode = `function ${task.fun_name} {
-    // Write your code here
-}`;
+        // Write your code here
+      }`;
             setCode(newDefaultCode);
             setResults([]);
         }
@@ -60,70 +63,35 @@ function Task() {
 
     const getValue = async () => {
         if (!task) return;
+
         const codeText = editorRef.current.getValue();
-
-        const functionName = task.fun_name.slice(
-            0,
-            task.fun_name.indexOf("(")
-        );
-
+        const functionName = task.fun_name.slice(0, task.fun_name.indexOf("("));
         const wrappedCode = `(function() { ${codeText} return ${functionName}; })()`;
 
         const userFunction = eval(wrappedCode);
-
         const resultsArray = task.check.map((testCase, index) => {
             const args = testCase.split(",").map(Number);
             const result = userFunction(...args);
             const expected = task.answers[index];
-            return `${functionName}(${args.join(", ")}) => ${result} - ${
-                result === expected ? "Passed ✅" : "Failed ❌"
-            }`;
+            return `${functionName}(${args.join(", ")}) => ${result} - ${result === expected ? "Passed ✅" : "Failed ❌"}`;
         });
 
-        const allPassed = resultsArray.every((result) =>
-            result.includes("Passed")
-        );
+        const allPassed = resultsArray.every((result) => result.includes("Passed"));
         if (allPassed) {
             const count = 200;
-            const defaults = {
-                origin: {y: 0.7},
-            };
+            const defaults = {origin: {y: 0.7}};
 
             function fire(particleRatio: number, opts: any) {
-                confetti(
-                    Object.assign({}, defaults, opts, {
-                        particleCount: Math.floor(count * particleRatio),
-                    })
-                );
+                confetti(Object.assign({}, defaults, opts, {particleCount: Math.floor(count * particleRatio)}));
             }
 
-            fire(0.25, {
-                spread: 26,
-                startVelocity: 55,
-            });
-
-            fire(0.2, {
-                spread: 60,
-            });
-
-            fire(0.35, {
-                spread: 100,
-                decay: 0.91,
-                scalar: 0.8,
-            });
-
-            fire(0.1, {
-                spread: 120,
-                startVelocity: 25,
-                decay: 0.92,
-                scalar: 1.2,
-            });
-
-            fire(0.1, {
-                spread: 120,
-                startVelocity: 45,
-            });
+            fire(0.25, {spread: 26, startVelocity: 55});
+            fire(0.2, {spread: 60});
+            fire(0.35, {spread: 100, decay: 0.91, scalar: 0.8});
+            fire(0.1, {spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2});
+            fire(0.1, {spread: 120, startVelocity: 45});
         }
+
         setResults(resultsArray);
         return editorRef.current.getValue();
     };
@@ -158,25 +126,36 @@ function Task() {
         monaco.editor.setTheme("shadesOfPurple");
     };
 
-    function handleEditorValidation(markers: any[]) {
-        // model markers
+    const handleEditorValidation = (markers: any[]) => {
         markers.forEach((marker) => console.log("onValidate:", marker.message));
-    }
+    };
 
-    const functionName: string = task ? task.fun_name.replace(/\(.*\)$/, "") : "";
-    const capitalizedFunctionName: string = functionName.charAt(0).toUpperCase() + functionName.slice(1);
+    const capitalizedFunctionName = task?.fun_name.replace(/\(.*\)$/, "").replace(/^\w/, (c) => c.toUpperCase()) || "";
 
     const breadcrumbs = [
-        <Link className="fs-4 text-secondary text-decoration-none" key="1" color="inherit" to="/">
+        <Link className="fs-4 text-secondary text-decoration-none" key="1" to="/">
             Home
         </Link>,
-        <Link className="fs-4 text-secondary text-decoration-none" key="2" color="inherit" to="/tasks">
+        <Link className="fs-4 text-secondary text-decoration-none" key="2" to="/tasks">
             Tasks
         </Link>,
-        <Typography className="fs-5 text-light" key="2">
+        <Typography className="fs-5 text-light" key="3">
             {capitalizedFunctionName}
-        </Typography>
+        </Typography>,
     ];
+
+    useEffect(() => {
+        const fetchComments = async () => {
+            try {
+                const res = await axios.get(`https://f7f2aac439c74f02.mokky.dev/comments?taskId=${taskId}`);
+                setComments(res.data);
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        fetchComments();
+    }, [taskId]);
 
     return (
         <section className="container py-3">
@@ -185,28 +164,17 @@ function Task() {
             </p>
             <hr className="text-secondary"/>
             <div className="breadcrumb2">
-                <Breadcrumbs
-                    separator={<NavigateNextIcon fontSize="small"/>}
-                    aria-label="breadcrumb"
-                    className="my-3"
-                >
+                <Breadcrumbs separator={<NavigateNextIcon fontSize="small"/>} aria-label="breadcrumb" className="my-3">
                     {breadcrumbs}
                 </Breadcrumbs>
             </div>
-            <div
-                className="row rounded-4 px-3 py-4"
-                style={{backgroundColor: "#303041"}}
-            >
+            <div className="row rounded-4 px-3 py-4" style={{backgroundColor: "#303041"}}>
                 <div className="col-6">
                     <div>
-                        <h2 className="p-0 m-0 text-white">
-                            {task ? task.fun_name : ""}
-                        </h2>
-                        <p className="text-white my-3 fs-5">
-                            {task ? task.text : ""}
-                        </p>
+                        <h2 className="p-0 m-0 text-white">{task?.fun_name || ""}</h2>
+                        <p className="text-white my-3 fs-5">{task?.text || ""}</p>
                         <ul className="fs-5 ps-4 my-3">
-                            {task && task.examples.map((item, index) => (
+                            {task?.examples.map((item, index) => (
                                 <li key={index} className="text-white">
                                     {item}
                                 </li>
@@ -252,10 +220,7 @@ function Task() {
                             />
                         </div>
                         <div className="button-wrapper d-flex justify-content-end align-items-center">
-                            <button
-                                className="btn btn-outline-light my-3"
-                                onClick={getValue}
-                            >
+                            <button className="btn btn-outline-light my-3" onClick={getValue}>
                                 Topshirish
                             </button>
                         </div>
@@ -264,25 +229,36 @@ function Task() {
                 <div className="accordion accordion-flush mt-4 rounded-3" id="accordionFlushExample">
                     <div className="accordion-item rounded-3" style={{backgroundColor: "#1F1F2B"}}>
                         <h2 className="accordion-header">
-                            <button className="accordion-button collapsed text-light fs-5" type="button"
-                                    style={{backgroundColor: "#1F1F2B"}} data-bs-toggle="collapse"
-                                    data-bs-target="#flush-collapseOne" aria-expanded="false"
-                                    aria-controls="flush-collapseOne">
+                            <button
+                                className="accordion-button collapsed text-light fs-5"
+                                type="button"
+                                style={{backgroundColor: "#1F1F2B"}}
+                                data-bs-toggle="collapse"
+                                data-bs-target="#flush-collapseOne"
+                                aria-expanded="false"
+                                aria-controls="flush-collapseOne"
+                            >
                                 Comments
                             </button>
                         </h2>
-                        <div id="flush-collapseOne" className="accordion-collapse collapse"
-                             data-bs-parent="#accordionFlushExample">
+                        <div
+                            id="flush-collapseOne"
+                            className="accordion-collapse collapse"
+                            data-bs-parent="#accordionFlushExample"
+                        >
                             <div className="accordion-body">
-                                <ul className="list-group list-group-flush"></ul>
+                                <ul className="list-group list-group-flush">
+                                    {comments.map((cmt, index) => (
+                                        <Comment key={index} userName={cmt.userName} comment={cmt.comment}/>
+                                    ))}
+                                </ul>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </section>
-    )
-        ;
-}
+    );
+};
 
 export default Task;
