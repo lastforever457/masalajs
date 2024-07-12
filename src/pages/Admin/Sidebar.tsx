@@ -27,44 +27,44 @@ export default function Sidebar({open, toggleDrawer}: TemporaryDrawerProps) {
                 </Typography>
                 <List>
                     <ListItem disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon sx={{color: "#fff"}}>
-                                <PeopleIcon/>
-                            </ListItemIcon>
-                            <Link to="/admin" className="text-decoration-none text-light">
+                        <Link to="/admin" className="text-decoration-none text-light">
+                            <ListItemButton>
+                                <ListItemIcon sx={{color: "#fff"}}>
+                                    <PeopleIcon/>
+                                </ListItemIcon>
                                 <ListItemText primary="Users"/>
-                            </Link>
-                        </ListItemButton>
+                            </ListItemButton>
+                        </Link>
                     </ListItem>
                     <ListItem disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon sx={{color: "#fff"}}>
-                                <FolderIcon/>
-                            </ListItemIcon>
-                            <Link to="/admin/departments" className="text-decoration-none text-light">
+                        <Link to="/admin/departments" className="text-decoration-none text-light">
+                            <ListItemButton>
+                                <ListItemIcon sx={{color: "#fff"}}>
+                                    <FolderIcon/>
+                                </ListItemIcon>
                                 <ListItemText primary="Departments"/>
-                            </Link>
-                        </ListItemButton>
+                            </ListItemButton>
+                        </Link>
                     </ListItem>
                     <ListItem disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon sx={{color: "#fff"}}>
-                                <AssignmentIcon/>
-                            </ListItemIcon>
-                            <Link to="/admin" className="text-decoration-none text-light">
+                        <Link to="/admin" className="text-decoration-none text-light">
+                            <ListItemButton>
+                                <ListItemIcon sx={{color: "#fff"}}>
+                                    <AssignmentIcon/>
+                                </ListItemIcon>
                                 <ListItemText primary="Tasks"/>
-                            </Link>
-                        </ListItemButton>
+                            </ListItemButton>
+                        </Link>
                     </ListItem>
                     <ListItem disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon sx={{color: "#fff"}}>
-                                <EmojiEventsIcon/>
-                            </ListItemIcon>
-                            <Link to="/admin" className="text-decoration-none text-light">
+                        <Link to="/admin" className="text-decoration-none text-light">
+                            <ListItemButton>
+                                <ListItemIcon sx={{color: "#fff"}}>
+                                    <EmojiEventsIcon/>
+                                </ListItemIcon>
                                 <ListItemText primary="Contests"/>
-                            </Link>
-                        </ListItemButton>
+                            </ListItemButton>
+                        </Link>
                     </ListItem>
                 </List>
             </Box>

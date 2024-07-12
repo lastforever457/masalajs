@@ -5,6 +5,9 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import IconButton from "@mui/material/IconButton";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const style = {
     position: 'absolute',
@@ -56,6 +59,20 @@ function Departments() {
         fetchDepartments()
     }, []);
 
+    const addDepartment = async () => {
+        try {
+            const text: HTMLInputElement | null = document.querySelector("#add-department-input");
+            if (text) {
+                const res = await axios.post("https://f7f2aac439c74f02.mokky.dev/departments", {
+                    title: text.value
+                });
+                setDepartments([...departments, res.data]);
+            }
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
     return (
         <div className="px-5 py-3">
             <div className="departments-header d-flex justify-content-between align-items-center">
@@ -83,7 +100,14 @@ function Departments() {
                                 <td>{department.id}</td>
                                 <td>{department.title}</td>
                                 <td>{tasksInDepartment.length}</td>
-                                <td></td>
+                                <td>
+                                    <IconButton color="info">
+                                        <EditIcon/>
+                                    </IconButton>
+                                    <IconButton color="error">
+                                        <DeleteIcon/>
+                                    </IconButton>
+                                </td>
                             </tr>
                         );
                     })}
@@ -101,9 +125,10 @@ function Departments() {
                     <Typography id="modal-modal-title" variant="h6" className="mb-4" component="h2">
                         Department qo'shish
                     </Typography>
-                    <input placeholder="Department nomini kiriting" type="text" className="form-control"/>
+                    <input id="add-department-input" placeholder="Department nomini kiriting" type="text"
+                           className="form-control"/>
                     <div className="add-department-btn-wrapper d-flex justify-content-end">
-                        <Button variant="contained" className="mt-4">Qo'shish</Button>
+                        <Button onClick={addDepartment} variant="contained" className="mt-4">Qo'shish</Button>
                     </div>
                 </Box>
             </Modal>
