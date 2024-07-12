@@ -31,7 +31,7 @@ function TaskPage() {
             setTasks(res.data);
         }
         fetchTasks()
-    }, []);
+    }, [depId]);
 
     const breadcrumbs = [
         <Link className="fs-4 text-secondary text-decoration-none" key="1" color="inherit" to="/">
