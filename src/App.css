@@ -72,6 +72,7 @@ section {
 .codeground {
     max-height: 40vh;
     overflow: hidden;
+    overflow-y: auto;
 }
 
 .login-tab {
