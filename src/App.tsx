@@ -40,7 +40,7 @@ const App = () => {
                 <Route path="/tasks" element={<TaskPage/>}/>
                 <Route path="/tasks/task" element={<Task/>}/>
                 <Route path="/leaderboard" element={<Leaderboard/>}/>
-                {currentUser && currentUser.role === "admin" ? <Route path="/" element={<Admin/>}/> :
+                {currentUser && currentUser.role === "admin" ? <Route path="*" element={<Admin/>}/> :
                     <Route path="/" element={<Home/>}/>}
             </Routes>
             <ToastContainer
