@@ -85,11 +85,11 @@ function Login() {
             <hr className="text-secondary"/>
             <Tabs defaultValue={0}>
                 <TabsList className="d-flex gap-3">
-                    <Tab className="login-tab" value={0}>
-                        Log in
+                    <Tab className="login-tab px-3" value={0}>
+                        Kirish
                     </Tab>
-                    <Tab className="login-tab" value={1}>
-                        Register
+                    <Tab className="login-tab px-3" value={1}>
+                        Ro'yxatdan o'tish
                     </Tab>
                 </TabsList>
                 <TabPanel value={0}>
@@ -101,7 +101,7 @@ function Login() {
                                     className="form-label text-light"
                                     htmlFor="email"
                                 >
-                                    Email
+                                    Elektron pochta
                                 </label>
                                 <input
                                     className="form-control"
@@ -115,7 +115,7 @@ function Login() {
                                     className="form-label text-light"
                                     htmlFor="password"
                                 >
-                                    Password
+                                    Parol
                                 </label>
                                 <input
                                     className="form-control"
@@ -125,7 +125,7 @@ function Login() {
                                 />
                             </div>
                             <div className="my-4">
-                                <button onClick={handleLogin} className="px-5 btn btn-outline-light">Login</button>
+                                <button onClick={handleLogin} className="px-5 btn btn-outline-light">Kirish</button>
                             </div>
                         </form>
                     </div>
@@ -139,7 +139,7 @@ function Login() {
                                     className="form-label text-light"
                                     htmlFor="name"
                                 >
-                                    Name
+                                    Ism
                                 </label>
                                 <input
                                     className="form-control"
@@ -153,7 +153,7 @@ function Login() {
                                     className="form-label text-light"
                                     htmlFor="email"
                                 >
-                                    Email
+                                    Elektron pochta
                                 </label>
                                 <input
                                     className="form-control"
@@ -167,7 +167,7 @@ function Login() {
                                     className="form-label text-light"
                                     htmlFor="password"
                                 >
-                                    Password
+                                    Parol
                                 </label>
                                 <input
                                     className="form-control"
@@ -177,7 +177,7 @@ function Login() {
                                 />
                             </div>
                             <div className="my-4">
-                                <button onClick={handleRegister} className="px-5 btn btn-light">Register</button>
+                                <button onClick={handleRegister} className="px-3 btn btn-outline-light">Ro'yxatdan o'tish</button>
                             </div>
                         </form>
                     </div>

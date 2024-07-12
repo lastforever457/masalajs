@@ -190,7 +190,7 @@ const Task: React.FC = () => {
                 </Breadcrumbs>
             </div>
             <div className="row rounded-4 px-3 py-4" style={{backgroundColor: "#303041"}}>
-                <div className="col-6">
+                <div className="col-12 col-md-6">
                     <div>
                         <h2 className="p-0 m-0 text-white">{task?.fun_name || ""}</h2>
                         <p className="text-white my-3 fs-5">{task?.text || ""}</p>
@@ -223,7 +223,7 @@ const Task: React.FC = () => {
                         </div>
                     </div>
                 </div>
-                <div className="col-6">
+                <div className="col-12 col-md-6">
                     <div>
                         <div className="codeground rounded-3">
                             <Editor

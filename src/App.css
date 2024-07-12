@@ -70,7 +70,7 @@ section {
 }
 
 .codeground {
-    height: 40vh;
+    max-height: 40vh;
     overflow: hidden;
 }
 
@@ -107,11 +107,18 @@ section {
     transition: 0.15s;
 }
 
-.department-card:hover .department-progress{
+.department-card:hover .department-progress {
     border: 3px solid #ffd700;
     box-shadow: 0 0 10px 10px rgba(0, 0, 0, 0.3);
 }
 
 #comment-accordion > li input::placeholder {
     color: gainsboro;
+}
+
+@media screen and (max-width: 760px) {
+    .codeground {
+        padding: 0;
+        margin-top: 30px;
+    }
 }
