@@ -1,6 +1,6 @@
 import Editor, {Monaco} from "@monaco-editor/react";
 import confetti from "canvas-confetti";
-import React, {MouseEvent, useEffect, useRef, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {IoCheckmarkDoneCircle} from "react-icons/io5";
 import axios from "axios";
 import {Link} from "react-router-dom";
@@ -28,11 +28,6 @@ interface IUser {
     role: string;
     id: number;
     results: { [key: string]: boolean };
-}
-
-interface IComment {
-    userName: string;
-    comment: string;
 }
 
 const Task: React.FC = () => {
@@ -65,7 +60,7 @@ const Task: React.FC = () => {
             setResults([]);
             getComments(task.id); // Fetch comments whenever the task is set
         }
-    }, [task, getComments]);
+    }, [task]);
 
     const showValue = (value: string | undefined) => {
         setCode(value || "");
@@ -106,7 +101,7 @@ const Task: React.FC = () => {
         return editorRef.current.getValue();
     };
 
-    const handleEditorDidMount = (editor: any, monaco: Monaco) => {
+    const handleEditorDidMount = (editor: unknown, monaco: Monaco) => {
         editorRef.current = editor;
 
         monaco.editor.defineTheme("shadesOfPurple", {
@@ -134,10 +129,6 @@ const Task: React.FC = () => {
         });
 
         monaco.editor.setTheme("shadesOfPurple");
-    };
-
-    const handleEditorValidation = (markers: any[]) => {
-        markers.forEach((marker) => console.log("onValidate:", marker.message));
     };
 
     const capitalizedFunctionName = task?.fun_name.replace(/\(.*\)$/, "").replace(/^\w/, (c) => c.toUpperCase()) || "";
@@ -168,7 +159,7 @@ const Task: React.FC = () => {
                     userName: parsedUser.name,
                     comment: input.value,
                 });
-                getComments(taskId); // Refresh comments after adding a new one
+                getComments(taskId);
             }
             input.value = "";
         } catch (error) {
@@ -235,7 +226,6 @@ const Task: React.FC = () => {
                                     scrollBeyondLastLine: false,
                                 }}
                                 onMount={handleEditorDidMount}
-                                onValidate={handleEditorValidation}
                             />
                         </div>
                         <div className="button-wrapper d-flex justify-content-end align-items-center">
@@ -279,6 +269,8 @@ const Task: React.FC = () => {
                                         </div>
                                     </li>
                                     {comments.map((cmt, index) => (
+                                        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                                        //@ts-expect-error
                                         <Comment key={index} userName={cmt.userName} comment={cmt.comment}/>
                                     ))}
                                 </ul>
