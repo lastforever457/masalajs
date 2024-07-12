@@ -225,8 +225,9 @@ const Task: React.FC = () => {
                 </div>
                 <div className="col-12 col-md-6">
                     <div>
-                        <div className="codeground rounded-3">
+                        <div className="codeground rounded-3" style={{height: '100%'}}>
                             <Editor
+                                height="100vh"
                                 language="javascript"
                                 value={code}
                                 onChange={showValue}
@@ -234,7 +235,8 @@ const Task: React.FC = () => {
                                 options={{
                                     minimap: {enabled: false},
                                     fontSize: 18,
-                                    scrollBeyondLastLine: false,
+                                    scrollBeyondLastLine: true,
+                                    automaticLayout: true,
                                 }}
                                 onMount={handleEditorDidMount}
                             />

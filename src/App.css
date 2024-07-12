@@ -71,8 +71,8 @@ section {
 
 .codeground {
     max-height: 40vh;
-    overflow: hidden;
-    overflow-y: auto;
+    height: 100%; /* Ensure the container uses the available height */
+    overflow: hidden; /* Hide any overflow, let Monaco handle scrolling */
 }
 
 .login-tab {

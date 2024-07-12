@@ -8,6 +8,7 @@ import {useEffect} from "react";
 import useLogin from "./Functions/UseLogin.tsx";
 import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import Leaderboard from "./pages/Leaderboard.tsx";
 
 const App = () => {
 
@@ -23,6 +24,7 @@ const App = () => {
                 <Route path="/login" element={<Login/>}/>
                 <Route path="/tasks" element={<TaskPage/>}/>
                 <Route path="/tasks/task" element={<Task/>}/>
+                <Route path="/leaderboard" element={<Leaderboard/>}/>
             </Routes>
             <ToastContainer
                 position="top-right"

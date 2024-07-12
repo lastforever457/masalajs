@@ -1,7 +1,8 @@
 import React, {useEffect} from 'react';
 import {GiSandsOfTime} from "react-icons/gi";
-import {Link, useNavigate} from "react-router-dom";
 import {ImExit} from "react-icons/im";
+import {MdLeaderboard} from "react-icons/md";
+import {Link, useNavigate} from "react-router-dom";
 import useLogin from "../Functions/UseLogin";
 import useDepartments from "../Functions/UseDepartments";
 import useTasks from "../Functions/UseTasks";
@@ -50,11 +51,18 @@ const Home: React.FC = () => {
         await checkLogin();
     };
 
+    const openLeaderboards = () => {
+        navigate("/leaderboard");
+    }
+
     return (
         <section id="home" className="container py-3">
             <div className="home-header d-flex justify-content-between align-items-center">
                 <p id="main-title" className="p-0 m-0">masala.js</p>
-                <button onClick={logout} className="btn text-light fs-5"><ImExit/></button>
+                <div className="main-actions d-flex justify-content-center align-items-center gap-2">
+                    <button onClick={openLeaderboards} className="btn fs-5"><MdLeaderboard/></button>
+                    <button onClick={logout} className="btn text-light fs-5"><ImExit/></button>
+                </div>
             </div>
             <p className="fs-5 text-secondary">
                 JavaScript dasturlash tiliga oid turli qiyinlikdagi masalalar
@@ -62,7 +70,7 @@ const Home: React.FC = () => {
             <hr className="text-secondary"/>
             <div className="row">
                 {departments.map((item: IDepartment) => {
-                    const departmentTasks:ITask[] = tasks.filter((t: ITask) => t.departmentId === item.id)
+                    const departmentTasks: ITask[] = tasks.filter((t: ITask) => t.departmentId === item.id)
                     const solvedTasks = Object.keys(user.results).map(k => (parseInt(k) as number))
                     const solvedCount = departmentTasks.filter(t => solvedTasks.includes(t.id)).length;
                     const percentage = (solvedCount / departmentTasks.length) * 100;
