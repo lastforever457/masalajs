@@ -1,8 +1,8 @@
-import { GiSandsOfTime } from "react-icons/gi";
-import { Link, useNavigate } from "react-router-dom";
-import { ImExit } from "react-icons/im";
+import React, {useEffect} from 'react';
+import {GiSandsOfTime} from "react-icons/gi";
+import {Link, useNavigate} from "react-router-dom";
+import {ImExit} from "react-icons/im";
 import useLogin from "../Functions/UseLogin";
-import { useEffect } from "react";
 import useDepartments from "../Functions/UseDepartments";
 import useTasks from "../Functions/UseTasks";
 
@@ -22,11 +22,23 @@ interface ITask {
     answers: number[];
 }
 
-function Home() {
+interface IUser {
+    name: string;
+    email: string;
+    password: string;
+    role: string;
+    id: number;
+    results: { [key: string]: boolean }[];
+}
+
+const Home: React.FC = () => {
     const navigate = useNavigate();
-    const { checkLogin } = useLogin();
-    const { departments, getDepartments } = useDepartments();
-    const { tasks, getTasks } = useTasks();
+    const {checkLogin} = useLogin();
+    const {departments, getDepartments} = useDepartments();
+    const {tasks, getTasks} = useTasks();
+
+    const user: IUser = JSON.parse(localStorage.getItem("token") || "{}");
+    user.results = user.results || [];
 
     useEffect(() => {
         getDepartments();
@@ -42,17 +54,19 @@ function Home() {
         <section id="home" className="container py-3">
             <div className="home-header d-flex justify-content-between align-items-center">
                 <p id="main-title" className="p-0 m-0">masala.js</p>
-                <button onClick={logout} className="btn text-light fs-5"><ImExit /></button>
+                <button onClick={logout} className="btn text-light fs-5"><ImExit/></button>
             </div>
             <p className="fs-5 text-secondary">
                 JavaScript dasturlash tiliga oid turli qiyinlikdagi masalalar
             </p>
-            <hr className="text-secondary" />
+            <hr className="text-secondary"/>
             <div className="row">
                 {departments.map((item: IDepartment) => {
-                    const departmentTasks = tasks.filter((t: ITask) => t.departmentId === item.id);
-                    const solvedTasks = departmentTasks.filter((t: ITask) => t.solved).length;
-                    const progress = departmentTasks.length ? (solvedTasks * 100) / departmentTasks.length : 0;
+                    const departmentTasks:ITask[] = tasks.filter((t: ITask) => t.departmentId === item.id)
+                    const solvedTasks = Object.keys(user.results).map(k => (parseInt(k) as number))
+                    const solvedCount = departmentTasks.filter(t => solvedTasks.includes(t.id)).length;
+                    const percentage = (solvedCount / departmentTasks.length) * 100;
+                    localStorage.setItem("solvedTasks", JSON.stringify(solvedTasks));
 
                     return (
                         <div key={item.id} className="col-sm-6 col-md-4 col-lg-3 my-2">
@@ -69,13 +83,13 @@ function Home() {
                                     <h2>{item.title}</h2>
                                     <p className="fs-3 p-0 m-0">
                                         {departmentTasks.length}
-                                        <GiSandsOfTime className="fs-4" />
+                                        <GiSandsOfTime className="fs-4"/>
                                     </p>
                                 </div>
                                 <div className="col-sm-6 department-progress-wrapper position-relative">
                                     <div className="department-progress">
-                                        <h3>
-                                            {progress.toFixed(2)}
+                                        <h3 className="m-0">
+                                            {percentage ? percentage : '0'}
                                             <span>%</span>
                                         </h3>
                                     </div>
@@ -87,6 +101,6 @@ function Home() {
             </div>
         </section>
     );
-}
+};
 
 export default Home;

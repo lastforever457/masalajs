@@ -35,10 +35,10 @@ function TaskPage() {
 
     const breadcrumbs = [
         <Link className="fs-4 text-secondary text-decoration-none" key="1" color="inherit" to="/">
-            Home
+            Bosh sahifa
         </Link>,
         <Typography className="fs-5 text-light" key="2">
-            Tasks
+            Vazifalar
         </Typography>
     ];
 
@@ -78,20 +78,17 @@ function TaskPage() {
                                     );
                                     navigate("/tasks/task");
                                 }}
-                                className="row text-decoration-none tasks-card m-1 shadow-lg px-2 py-3"
+                                className="row text-decoration-none tasks-card m-1 shadow-lg px-3 py-3"
                             >
-                                <div className="col-sm-6 d-flex flex-column justify-content-around align-items-start">
-                                    <h2
-                                        className="p-0 m-0"
-                                        style={{maxWidth: "100px"}}
-                                    >
-                                        {title}
-                                    </h2>
-                                </div>
-                                <div className="col-sm-6 department-progress-wrapper position-relative"></div>
+                                <h2
+                                    className="p-0 m-0"
+                                >
+                                    {title}
+                                </h2>
                             </Link>
                         </div>
-                    );
+                    )
+                        ;
                 })}
             </div>
         </section>

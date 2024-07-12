@@ -27,13 +27,13 @@ interface IUser {
     password: string;
     role: string;
     id: number;
-    results: { [key: string]: boolean };
+    results: { [key: number]: boolean };
 }
 
 const Task: React.FC = () => {
     const [task, setTask] = useState<ITask | null>(null);
     const taskId = parseInt(localStorage.getItem("taskId") || "", 10);
-    const {comments, getComments} = useComments(taskId);
+    const {comments, getComments} = useComments();
     const [code, setCode] = useState<string>("");
     const [results, setResults] = useState<string[]>([]);
     const editorRef = useRef<any>(null);
@@ -85,6 +85,17 @@ const Task: React.FC = () => {
         if (allPassed) {
             const count = 200;
             const defaults = {origin: {y: 0.7}};
+            const userObj = localStorage.getItem("token") || "";
+            const user: IUser = JSON.parse(userObj);
+            await axios.patch(`https://f7f2aac439c74f02.mokky.dev/userDetails/${user.id}`, {
+                results: {
+                    ...user.results,
+                    [task.id]: true,
+                }
+            })
+            const res = await axios.get(`https://f7f2aac439c74f02.mokky.dev/userDetails?id=${user.id}`)
+            const updatedUser = res.data[0];
+            localStorage.setItem("token", JSON.stringify(updatedUser));
 
             function fire(particleRatio: number, opts: any) {
                 confetti(Object.assign({}, defaults, opts, {particleCount: Math.floor(count * particleRatio)}));

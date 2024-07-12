@@ -125,7 +125,7 @@ function Login() {
                                 />
                             </div>
                             <div className="my-4">
-                                <button onClick={handleLogin} className="px-5 btn btn-light">Login</button>
+                                <button onClick={handleLogin} className="px-5 btn btn-outline-light">Login</button>
                             </div>
                         </form>
                     </div>

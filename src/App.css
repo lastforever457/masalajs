@@ -56,6 +56,7 @@ section {
 }
 
 .tasks-card {
+    word-wrap: break-word;
     min-height: 70px;
     background-color: #303041;
     border-radius: 20px;
@@ -98,6 +99,18 @@ section {
     caret-color: #fff;
 }
 
+.department-progress {
+    width: 85px;
+    height: 85px;
+    border-radius: 50%;
+    box-shadow: 0 0 10px 10px rgba(0, 0, 0, 0.2);
+    transition: 0.15s;
+}
+
+.department-card:hover .department-progress{
+    border: 3px solid #ffd700;
+    box-shadow: 0 0 10px 10px rgba(0, 0, 0, 0.3);
+}
 
 #comment-accordion > li input::placeholder {
     color: gainsboro;
