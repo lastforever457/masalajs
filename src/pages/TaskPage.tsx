@@ -19,7 +19,6 @@ interface ITask {
 
 function TaskPage() {
     const [tasks, setTasks] = useState([]);
-    const [solvedTasks , setSolvedTasks] = useState([]);
     const navigate = useNavigate();
     const depId: number = parseInt(
         localStorage.getItem("departmentId") || "",
