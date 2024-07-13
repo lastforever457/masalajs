@@ -26,7 +26,7 @@ export default function Sidebar({open, toggleDrawer}: TemporaryDrawerProps) {
                     Admin Menu
                 </Typography>
                 <List>
-                    <Link to="/admin" className="text-decoration-none text-light">
+                    <Link to="/admin/users" className="text-decoration-none text-light">
                         <ListItem disablePadding>
                             <ListItemButton>
                                 <ListItemIcon sx={{color: "#fff"}}>

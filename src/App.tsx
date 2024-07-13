@@ -14,6 +14,7 @@ import {CssBaseline} from "@mui/material";
 import {ThemeProvider, createTheme} from '@mui/material/styles';
 import Departments from "./pages/Admin/AdminPages/Departments.tsx";
 import Tasks from "./pages/Admin/AdminPages/Tasks.tsx";
+import Users from "./pages/Admin/AdminPages/Users.tsx";
 
 const App = () => {
 
@@ -38,6 +39,7 @@ const App = () => {
                 <Route path="/tasks/task" element={<Task/>}/>
                 <Route path="/leaderboard" element={<Leaderboard/>}/>
                 <Route path="/admin" element={<Admin/>}>
+                    <Route path="users" element={<Users/>}/>
                     <Route path="tasks" element={<Tasks/>}/>
                     <Route path="departments" element={<Departments/>}/>
                 </Route>

@@ -173,13 +173,15 @@ function Tasks() {
                     </div>
                     <div className="my-2 d-flex flex-column justify-content-center align-items-start gap-1">
                         <label htmlFor="add-task-check-input">Tekshirish uchun variant kiriting</label>
-                        <input
-                            name="taskCheck"
-                            id="add-task-check-input"
-                            placeholder="3, 6"
-                            type="text"
-                            className="form-control"
-                        />
+                        <div className="input-group">
+                            <input
+                                name="taskCheck"
+                                id="add-task-check-input"
+                                placeholder="3, 6"
+                                type="text"
+                                className="form-control"
+                            />
+                        </div>
                     </div>
                     <div className="my-2 d-flex flex-column justify-content-center align-items-start gap-1">
                         <label htmlFor="add-task-result-input">Variant javobini kiriting</label>

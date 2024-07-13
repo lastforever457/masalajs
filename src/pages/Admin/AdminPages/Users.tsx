@@ -1,9 +1,3 @@
-import {MdLeaderboard} from "react-icons/md";
-import {ImExit} from "react-icons/im";
-import {Link} from "react-router-dom";
-import Typography from "@mui/material/Typography";
-import Breadcrumbs from "@mui/material/Breadcrumbs";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import {useEffect, useState} from "react";
 import axios from "axios";
 
@@ -27,7 +21,7 @@ interface ITask {
     answers: number[];
 }
 
-function Leaderboard() {
+function Users() {
     const [users, setUsers] = useState<IUser[]>([]);
     const [tasks, setTasks] = useState<ITask[] | null>(null);
 
@@ -45,15 +39,6 @@ function Leaderboard() {
 
         fetchUsersAndTasks();
     }, []);
-
-    const breadcrumbs = [
-        <Link className="fs-4 text-secondary text-decoration-none" key="1" to="/">
-            Bosh sahifa
-        </Link>,
-        <Typography className="fs-5 text-light" key="2">
-            Leaderboard
-        </Typography>,
-    ];
 
     const sortedUsers = [...users].sort((a, b) => {
         const aSolved = a.results ? Object.keys(a.results).length : 0;
@@ -73,23 +58,11 @@ function Leaderboard() {
     }
 
     return (
-        <section id="home" className="container py-3">
-            <div className="home-header d-flex justify-content-between align-items-center">
-                <p id="main-title" className="p-0 m-0">masala.js</p>
-                <div className="main-actions d-flex justify-content-center align-items-center gap-2">
-                    <button className="btn fs-5"><MdLeaderboard/></button>
-                    <button className="btn text-light fs-5"><ImExit/></button>
-                </div>
+        <div className="px-5 py-3">
+            <div className="departments-header d-flex justify-content-between align-items-center">
+                <h2>Users</h2>
             </div>
-            <p className="fs-5 text-secondary">
-                JavaScript dasturlash tiliga oid turli qiyinlikdagi masalalar
-            </p>
-            <hr className="text-secondary"/>
-            <div className="breadcrumb2">
-                <Breadcrumbs separator={<NavigateNextIcon fontSize="small"/>} aria-label="breadcrumb" className="my-3">
-                    {breadcrumbs}
-                </Breadcrumbs>
-            </div>
+            <hr/>
             <table className="table table-responsive text-center">
                 <thead>
                 <tr>
@@ -125,8 +98,8 @@ function Leaderboard() {
                 )}
                 </tbody>
             </table>
-        </section>
+        </div>
     );
 }
 
-export default Leaderboard;
+export default Users;
