@@ -76,7 +76,7 @@ function Departments() {
     return (
         <div className="px-5 py-3">
             <div className="departments-header d-flex justify-content-between align-items-center">
-                <h2>Departments</h2>
+                <h2>Modullar</h2>
                 <button onClick={handleOpen} className="btn">
                     <AddIcon/>
                 </button>
@@ -100,11 +100,11 @@ function Departments() {
                                 <td>{department.id}</td>
                                 <td>{department.title}</td>
                                 <td>{tasksInDepartment.length}</td>
-                                <td>
-                                    <IconButton color="info">
+                                <td className="d-flex justify-content-center align-items-center gap-2">
+                                    <IconButton className="p-0" color="info">
                                         <EditIcon/>
                                     </IconButton>
-                                    <IconButton color="error">
+                                    <IconButton className="p-0" color="error">
                                         <DeleteIcon/>
                                     </IconButton>
                                 </td>
@@ -123,7 +123,7 @@ function Departments() {
             >
                 <Box sx={style}>
                     <Typography id="modal-modal-title" variant="h6" className="mb-4" component="h2">
-                        Department qo'shish
+                        Modul qo'shish
                     </Typography>
                     <input id="add-department-input" placeholder="Department nomini kiriting" type="text"
                            className="form-control"/>

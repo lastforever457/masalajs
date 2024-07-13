@@ -1,21 +1,24 @@
 import axios from "axios";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
 
 const useLogin = () => {
     const navigate = useNavigate();
+    const location = useLocation();
 
     const checkLogin = async () => {
         const tokenStr = localStorage.getItem("token");
+
         if (tokenStr) {
             const token = JSON.parse(tokenStr);
             try {
                 const res = await axios.get(`https://f7f2aac439c74f02.mokky.dev/userDetails?email=${token.email}&password=${token.password}`);
                 const user = res.data[0];
                 if (token && user && token.email === user.email) {
-                    navigate("/")
+                    if (location.pathname === "/login") navigate("/")
                     if (user.role === "admin") {
-                        toast.success(`Xush kelibsiz boshliq !`, {
+
+                        toast.success(`Xush kelibsiz admin !`, {
                             position: "top-right",
                             autoClose: 3000,
                             hideProgressBar: false,
@@ -26,6 +29,7 @@ const useLogin = () => {
                             theme: "dark",
                         });
                     } else {
+                        if(location.pathname.startsWith("/admin")) navigate("/")
                         toast.success(`Xush kelibsiz ${user.name} !`, {
                             position: "top-right",
                             autoClose: 3000,
