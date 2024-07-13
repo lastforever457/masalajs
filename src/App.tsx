@@ -15,6 +15,7 @@ import {ThemeProvider, createTheme} from '@mui/material/styles';
 import Departments from "./pages/Admin/AdminPages/Departments.tsx";
 import Tasks from "./pages/Admin/AdminPages/Tasks.tsx";
 import Users from "./pages/Admin/AdminPages/Users.tsx";
+import Contest from "./pages/Admin/AdminPages/Contest.tsx";
 
 const App = () => {
 
@@ -42,6 +43,7 @@ const App = () => {
                     <Route path="users" element={<Users/>}/>
                     <Route path="tasks" element={<Tasks/>}/>
                     <Route path="departments" element={<Departments/>}/>
+                    <Route path="contest" element={<Contest/>}/>
                 </Route>
 
             </Routes>

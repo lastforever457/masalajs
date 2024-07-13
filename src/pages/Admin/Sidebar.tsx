@@ -56,7 +56,7 @@ export default function Sidebar({open, toggleDrawer}: TemporaryDrawerProps) {
                             </ListItemButton>
                         </ListItem>
                     </Link>
-                    <Link to="/admin" className="text-decoration-none text-light">
+                    <Link to="/admin/contest" className="text-decoration-none text-light">
                         <ListItem disablePadding>
                             <ListItemButton>
                                 <ListItemIcon sx={{color: "#fff"}}>
