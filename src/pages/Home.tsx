@@ -32,7 +32,6 @@ interface INotification {
     color: "primary" | "secondary" | "success" | "info" | "warning" | "error" | "danger" | "light" | "dark";
     users: { "id": number };
     date: string;
-    time: string
 }
 
 interface IUser {
@@ -91,10 +90,7 @@ const Home: React.FC = () => {
                 li.innerHTML = `
                     <div class="w-100 m-0 d-flex justify-content-between alert alert-${notification.color}" role="alert">
                         ${notification.text}
-                        <span class="d-flex gap-2">
-                            <span>${notification.date}</span>
-                            <span>${notification.time}</span>
-                        </span>
+                        <span>${notification.date}</span>
                     </div>
                 `;
                 ul.appendChild(li);

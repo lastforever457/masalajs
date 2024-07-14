@@ -108,12 +108,15 @@ function Users() {
 
         if (formData && message) {
             const checkedCheckboxes: NodeListOf<HTMLInputElement> = formData.querySelectorAll("input[type='checkbox']:checked");
-            const userIds: number[] = Array.from(checkedCheckboxes).map(checkbox => Number(checkbox.value));
+            const userIds: {
+                id: number
+            }[] = Array.from(checkedCheckboxes).map(checkbox => ({"id": Number(checkbox.value)}));
 
             const sendingData = {
                 text: message.value,
                 users: userIds,
-                color: "primary"
+                color: "primary",
+                date: new Date().toLocaleString()
             };
 
             try {
