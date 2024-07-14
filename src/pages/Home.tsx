@@ -1,13 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {GiSandsOfTime} from "react-icons/gi";
 import {ImExit} from "react-icons/im";
-import {MdLeaderboard} from "react-icons/md";
+import {MdLeaderboard, MdNotificationsActive} from "react-icons/md";
 import {Link, useNavigate} from "react-router-dom";
 import useLogin from "../Functions/UseLogin";
 import useDepartments from "../Functions/UseDepartments";
-import useTasks from "../Functions/UseTasks";
 import {GrUserAdmin} from "react-icons/gr";
-import {MdNotificationsActive} from "react-icons/md";
 import axios from "axios";
 
 interface IDepartment {
@@ -30,7 +28,7 @@ interface INotification {
     id: number;
     text: string;
     color: "primary" | "secondary" | "success" | "info" | "warning" | "error" | "danger" | "light" | "dark";
-    users: { "id": number };
+    users: { id: number };
     date: string;
 }
 
@@ -41,25 +39,27 @@ interface IUser {
     role: string;
     id: number;
     notifications: INotification[];
-    results: { [key: string]: boolean }[];
+    results: { [key: string]: boolean };
 }
 
 const Home: React.FC = () => {
     const navigate = useNavigate();
     const {checkLogin} = useLogin();
     const {departments, getDepartments} = useDepartments();
-    const {tasks, getTasks} = useTasks();
 
     const getUser: IUser = JSON.parse(localStorage.getItem("token") || "{}");
     const [user, setUser] = useState<IUser>(getUser);
     const [notifications, setNotifications] = useState<INotification[] | null>(null);
+    const [tasks, setTasks] = useState<ITask[] | null>(null);
 
     useEffect(() => {
         const fetchUser = async () => {
             try {
                 const res = await axios.get(`https://f7f2aac439c74f02.mokky.dev/userDetails?id=${getUser.id}`);
+                const resTasks = await axios.get(`https://f7f2aac439c74f02.mokky.dev/tasks`);
                 const resNotifications = await axios.get(`https://f7f2aac439c74f02.mokky.dev/notifications?users.id=${getUser.id}`);
                 setUser(res.data);
+                setTasks(resTasks.data);
                 setNotifications(resNotifications.data);
                 console.log(resNotifications);
             } catch (error) {
@@ -69,7 +69,6 @@ const Home: React.FC = () => {
 
         fetchUser();
         getDepartments();
-        getTasks();
     }, []);
 
     const logout = async () => {
@@ -121,12 +120,15 @@ const Home: React.FC = () => {
             <hr className="text-secondary"/>
             <div className="row">
                 {departments.map((item: IDepartment) => {
-                    const departmentTasks: ITask[] = tasks.filter((t: ITask) => t.departmentId === item.id);
+                    const departmentTask: ITask[] = tasks ? tasks.filter(t => t.departmentId === item.id) : [];
                     let percentage: number = 0;
                     if (user && user.results) {
-                        const solvedTasks = Object.keys(user.results).map(k => (parseInt(k) as number));
-                        const solvedCount = solvedTasks ? departmentTasks.filter(t => solvedTasks.includes(t.id)).length : 0;
-                        percentage = (solvedCount / departmentTasks.length) * 100;
+                        const solvedTasks = Object.keys(user.results).map(k => parseInt(k));
+                        console.log("Solved tasks", solvedTasks);
+                        const solvedCount = departmentTask.filter(t => solvedTasks.includes(t.id)).length;
+                        console.log("Solved count", solvedCount);
+                        percentage = departmentTask.length > 0 ? (solvedCount / departmentTask.length) * 100 : 0;
+                        console.log("Percentage", percentage);
                         localStorage.setItem("solvedTasks", JSON.stringify(solvedTasks));
                     }
 
@@ -144,14 +146,14 @@ const Home: React.FC = () => {
                                 <div className="col-sm-6 d-flex flex-column justify-content-around align-items-start">
                                     <h2>{item.title}</h2>
                                     <p className="fs-3 p-0 m-0">
-                                        {departmentTasks.length}
+                                        {departmentTask.length}
                                         <GiSandsOfTime className="fs-4"/>
                                     </p>
                                 </div>
                                 <div className="col-sm-6 department-progress-wrapper position-relative">
                                     <div className="department-progress">
                                         <h3 className="m-0">
-                                            {percentage ? percentage.toFixed(2) : '0'}
+                                            {percentage ? percentage.toFixed(2) : 0}
                                             <span>%</span>
                                         </h3>
                                     </div>
