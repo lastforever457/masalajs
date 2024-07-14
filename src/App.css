@@ -121,6 +121,13 @@ section {
     z-index: 9999 !important;
 }
 
+#users-checkbox-list > form{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    text-align: justify;
+}
+
 @media screen and (max-width: 760px) {
     .codeground {
         padding: 0;

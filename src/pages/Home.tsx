@@ -29,8 +29,10 @@ interface ITask {
 interface INotification {
     id: number;
     text: string;
-    read: boolean;
-    userId: number;
+    color: "primary" | "secondary" | "success" | "info" | "warning" | "error" | "danger" | "light" | "dark";
+    users: { "id": number };
+    date: string;
+    time: string
 }
 
 interface IUser {
@@ -51,13 +53,13 @@ const Home: React.FC = () => {
 
     const getUser: IUser = JSON.parse(localStorage.getItem("token") || "{}");
     const [user, setUser] = useState<IUser>(getUser);
-    const [notifications, setNotifications] = useState<IUser | null>(null);
+    const [notifications, setNotifications] = useState<INotification[] | null>(null);
 
     useEffect(() => {
         const fetchUser = async () => {
             try {
                 const res = await axios.get(`https://f7f2aac439c74f02.mokky.dev/userDetails?id=${getUser.id}`);
-                const resNotifications = await axios.get(`https://f7f2aac439c74f02.mokky.dev/userDetails?notifications.userId=${getUser.id}`);
+                const resNotifications = await axios.get(`https://f7f2aac439c74f02.mokky.dev/notifications?users.id=${getUser.id}`);
                 setUser(res.data);
                 setNotifications(resNotifications.data);
                 console.log(resNotifications);
@@ -83,18 +85,20 @@ const Home: React.FC = () => {
     const handleOpenNotifications = () => {
         const ul: HTMLUListElement | null = document.querySelector("#messagesModal ul");
         if (ul && notifications) {
-            for (let i: number = 0; i < notifications.notifications.length; i++) {
-                notifications.notifications.forEach((notification) => {
-                    const li = document.createElement("li");
-                    li.className = "list-group-item d-flex justify-content-between align-items-center";
-                    li.innerHTML = `
-                        <div style="filter: grayscale(0.5)" class="w-100 alert alert-primary" role="alert">
-                            ${notification.text}
-                        </div>
-                    `;
-                    ul.appendChild(li);
-                });
-            }
+            notifications.forEach((notification) => {
+                const li = document.createElement("li");
+                li.className = "list-group-item d-flex justify-content-between align-items-center";
+                li.innerHTML = `
+                    <div class="w-100 m-0 d-flex justify-content-between alert alert-${notification.color}" role="alert">
+                        ${notification.text}
+                        <span class="d-flex gap-2">
+                            <span>${notification.date}</span>
+                            <span>${notification.time}</span>
+                        </span>
+                    </div>
+                `;
+                ul.appendChild(li);
+            });
         }
     };
 
@@ -109,13 +113,6 @@ const Home: React.FC = () => {
                         <button onClick={handleOpenNotifications} data-bs-target="#messagesModal"
                                 data-bs-toggle="modal" type="button" className="btn position-relative">
                             <MdNotificationsActive className="fs-4"/>
-                            {notifications && notifications.notifications.length > 0 ? (
-                                <span
-                                    className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                    {notifications.notifications.filter(msg => !msg.read).length}
-                                    <span className="visually-hidden">unread messages</span>
-                                </span>
-                            ) : ("")}
                         </button>
                     )}
                     <button onClick={openLeaderboards} className="btn fs-5"><MdLeaderboard/></button>
@@ -170,7 +167,7 @@ const Home: React.FC = () => {
             </div>
             <div className="modal modal-lg fade" id="messagesModal" data-bs-backdrop="static"
                  data-bs-keyboard="false" tabIndex={-1} aria-labelledby="messagesModalLabel" aria-hidden="true">
-                <div className="modal-dialog">
+                <div className="modal-dialog modal-dialog-scrollable">
                     <div className="modal-content">
                         <div className="modal-header">
                             <h1 className="modal-title fs-5" id="messagesModalLabel">Bildirishnomalar</h1>
