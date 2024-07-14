@@ -28,7 +28,7 @@ interface ITask {
 
 interface INotification {
     id: number;
-    message: string;
+    text: string;
     read: boolean;
     userId: number;
 }
@@ -51,7 +51,7 @@ const Home: React.FC = () => {
 
     const getUser: IUser = JSON.parse(localStorage.getItem("token") || "{}");
     const [user, setUser] = useState<IUser>(getUser);
-    const [notifications, setNotifications] = useState<INotification[]>([]);
+    const [notifications, setNotifications] = useState<IUser | null>(null);
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -81,18 +81,19 @@ const Home: React.FC = () => {
     };
 
     const handleOpenNotifications = () => {
-        console.log(notifications[0])
         const ul: HTMLUListElement | null = document.querySelector("#messagesModal ul");
         if (ul && notifications) {
-            ul.innerHTML = "";
-            for (let i: number = 0; i < notifications.length; i++) {
-                console.log(notifications[i])
-                const li = document.createElement("li");
-                li.className = "list-group-item d-flex justify-content-between align-items-center";
-                li.innerHTML = `
-                    <p>${notifications[i].message}</p>
-                `;
-                ul.appendChild(li);
+            for (let i: number = 0; i < notifications.notifications.length; i++) {
+                notifications.notifications.forEach((notification) => {
+                    const li = document.createElement("li");
+                    li.className = "list-group-item d-flex justify-content-between align-items-center";
+                    li.innerHTML = `
+                        <div style="filter: grayscale(0.5)" class="w-100 alert alert-primary" role="alert">
+                            ${notification.text}
+                        </div>
+                    `;
+                    ul.appendChild(li);
+                });
             }
         }
     };
@@ -108,13 +109,13 @@ const Home: React.FC = () => {
                         <button onClick={handleOpenNotifications} data-bs-target="#messagesModal"
                                 data-bs-toggle="modal" type="button" className="btn position-relative">
                             <MdNotificationsActive className="fs-4"/>
-                            {notifications.length > 0 && (
+                            {notifications && notifications.notifications.length > 0 ? (
                                 <span
                                     className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                    {notifications.filter(msg => !msg.read).length}
+                                    {notifications.notifications.filter(msg => !msg.read).length}
                                     <span className="visually-hidden">unread messages</span>
                                 </span>
-                            )}
+                            ) : ("")}
                         </button>
                     )}
                     <button onClick={openLeaderboards} className="btn fs-5"><MdLeaderboard/></button>
@@ -177,7 +178,7 @@ const Home: React.FC = () => {
                                     aria-label="Close"></button>
                         </div>
                         <div className="modal-body">
-                            <ul className="list-group list-group-flush"></ul>
+                            <ul className="d-flex flex-column list-group list-group-flush"></ul>
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
