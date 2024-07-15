@@ -7,6 +7,8 @@ import useLogin from "../Functions/UseLogin";
 import useDepartments from "../Functions/UseDepartments";
 import {GrUserAdmin} from "react-icons/gr";
 import axios from "axios";
+import {IoEllipsisVerticalSharp} from "react-icons/io5";
+import {FaRegUserCircle} from "react-icons/fa";
 
 interface IDepartment {
     id: number;
@@ -40,6 +42,7 @@ interface IUser {
     id: number;
     notifications: INotification[];
     results: { [key: string]: boolean };
+    avatar: string
 }
 
 const Home: React.FC = () => {
@@ -61,7 +64,6 @@ const Home: React.FC = () => {
                 setUser(res.data);
                 setTasks(resTasks.data);
                 setNotifications(resNotifications.data);
-                console.log(resNotifications);
             } catch (error) {
                 console.log(error);
             }
@@ -83,6 +85,7 @@ const Home: React.FC = () => {
     const handleOpenNotifications = () => {
         const ul: HTMLUListElement | null = document.querySelector("#messagesModal ul");
         if (ul && notifications) {
+            ul.innerHTML = "";
             notifications.forEach((notification) => {
                 const li = document.createElement("li");
                 li.className = "list-group-item d-flex justify-content-between align-items-center";
@@ -102,16 +105,31 @@ const Home: React.FC = () => {
             <div className="home-header d-flex justify-content-between align-items-center">
                 <p id="main-title" className="p-0 m-0">masala.js</p>
                 <div className="main-actions d-flex justify-content-center align-items-center gap-2">
-                    {getUser.role === "admin" ? (
-                        <Link to="/admin" className="btn fs-5"><GrUserAdmin/></Link>
-                    ) : (
-                        <button onClick={handleOpenNotifications} data-bs-target="#messagesModal"
-                                data-bs-toggle="modal" type="button" className="btn position-relative">
-                            <MdNotificationsActive className="fs-4"/>
+                    <div className="dropdown">
+                        <button className="btn" type="button" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                            <IoEllipsisVerticalSharp/>
                         </button>
-                    )}
-                    <button onClick={openLeaderboards} className="btn fs-5"><MdLeaderboard/></button>
-                    <button onClick={logout} className="btn text-light fs-5"><ImExit/></button>
+                        <ul className="dropdown-menu">
+                            <li data-bs-toggle="modal" data-bs-target="#userProfileModal" className="dropdown-item d-flex justify-content-start align-items-center gap-2">
+                                <FaRegUserCircle/> Profilingiz
+                            </li>
+                            {getUser.role === "admin"
+                                ? (<li><Link to="/admin"
+                                             className="dropdown-item d-flex justify-content-start align-items-center gap-2"><GrUserAdmin/> Admin</Link>
+                                </li>)
+                                : (<li data-bs-target="#messagesModal" data-bs-toggle="modal"
+                                       className="dropdown-item d-flex justify-content-start align-items-center gap-2"
+                                       onClick={handleOpenNotifications}><MdNotificationsActive/> Xabarlar</li>)
+                            }
+                            <li className="dropdown-item d-flex justify-content-start align-items-center gap-2"
+                                onClick={openLeaderboards}><MdLeaderboard/> Reyting
+                            </li>
+                            <li className="dropdown-item d-flex justify-content-start align-items-center gap-2"
+                                onClick={logout}><ImExit/> Chiqish
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
             <p className="fs-5 text-secondary">
@@ -124,11 +142,8 @@ const Home: React.FC = () => {
                     let percentage: number = 0;
                     if (user && user.results) {
                         const solvedTasks = Object.keys(user.results).map(k => parseInt(k));
-                        console.log("Solved tasks", solvedTasks);
                         const solvedCount = departmentTask.filter(t => solvedTasks.includes(t.id)).length;
-                        console.log("Solved count", solvedCount);
                         percentage = departmentTask.length > 0 ? (solvedCount / departmentTask.length) * 100 : 0;
-                        console.log("Percentage", percentage);
                         localStorage.setItem("solvedTasks", JSON.stringify(solvedTasks));
                     }
 
@@ -163,6 +178,7 @@ const Home: React.FC = () => {
                     );
                 })}
             </div>
+            {/*Xabarlar modal*/}
             <div className="modal modal-lg fade" id="messagesModal" data-bs-backdrop="static"
                  data-bs-keyboard="false" tabIndex={-1} aria-labelledby="messagesModalLabel" aria-hidden="true">
                 <div className="modal-dialog modal-dialog-scrollable">
@@ -178,6 +194,34 @@ const Home: React.FC = () => {
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                             <button type="button" className="btn btn-primary">Barchasini yopish</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/*User profile modal*/}
+            <div className="modal modal-lg fade" id="userProfileModal" tabIndex={-1} aria-labelledby="userProfileModalLabel"
+                 aria-hidden="true">
+                <div className="modal-dialog modal-dialog-scrollable">
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h1 className="modal-title fs-5" id="userProfileModalLabel">Modal title</h1>
+                            <button type="button" className="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                        </div>
+                        <div className="modal-body">
+                            <div className="row">
+                                <div className="col-sm-6 col-md-4 d-flex justify-content-around align-items-center">
+                                    <div className="user-profile-image">
+                                        {getUser?getUser.avatar!="":"0"}
+                                    </div>
+                                </div>
+                                <div className="col-sm-6 col-md-8"></div>
+                            </div>
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" className="btn btn-primary">Save changes</button>
                         </div>
                     </div>
                 </div>
