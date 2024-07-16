@@ -14,6 +14,7 @@ const useLogin = () => {
             try {
                 const res = await axios.get(`https://f7f2aac439c74f02.mokky.dev/userDetails?email=${token.email}&password=${token.password}`);
                 const user = res.data[0];
+                localStorage.setItem("token", JSON.stringify(user));
                 if (token && user && token.email === user.email) {
                     if (location.pathname === "/login") navigate("/")
                     if (user.role === "admin") {
@@ -29,7 +30,7 @@ const useLogin = () => {
                             theme: "dark",
                         });
                     } else {
-                        if(location.pathname.startsWith("/admin")) navigate("/")
+                        if (location.pathname.startsWith("/admin")) navigate("/")
                         toast.success(`Xush kelibsiz ${user.name} !`, {
                             position: "top-right",
                             autoClose: 3000,

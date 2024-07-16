@@ -4,6 +4,7 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
+import {toast} from "react-toastify";
 
 interface IUser {
     name: string;
@@ -102,7 +103,6 @@ function Users() {
 
     const handleSendMessage = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-
         const formData: HTMLFormElement | null = document.querySelector("#userSendMessageForm");
         const message: HTMLTextAreaElement | null = document.querySelector("#send-message-textarea");
 
@@ -120,9 +120,28 @@ function Users() {
             };
 
             try {
-                const res = await axios.post("https://f7f2aac439c74f02.mokky.dev/notifications", sendingData);
-                console.log(res);
+                await axios.post("https://f7f2aac439c74f02.mokky.dev/notifications", sendingData);
+                toast.success(`Xabar yuborildi !`, {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                });
             } catch (error) {
+                toast.error(`Xatolik yuz berdi !`, {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                });
                 console.error(error);
             }
         }

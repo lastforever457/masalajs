@@ -111,7 +111,8 @@ const Home: React.FC = () => {
                             <IoEllipsisVerticalSharp/>
                         </button>
                         <ul className="dropdown-menu">
-                            <li data-bs-toggle="modal" data-bs-target="#userProfileModal" className="dropdown-item d-flex justify-content-start align-items-center gap-2">
+                            <li data-bs-toggle="modal" data-bs-target="#userProfileModal"
+                                className="dropdown-item d-flex justify-content-start align-items-center gap-2">
                                 <FaRegUserCircle/> Profilingiz
                             </li>
                             {getUser.role === "admin"
@@ -200,7 +201,8 @@ const Home: React.FC = () => {
             </div>
 
             {/*User profile modal*/}
-            <div className="modal modal-lg fade" id="userProfileModal" tabIndex={-1} aria-labelledby="userProfileModalLabel"
+            <div className="modal modal-lg fade" id="userProfileModal" tabIndex={-1}
+                 aria-labelledby="userProfileModalLabel"
                  aria-hidden="true">
                 <div className="modal-dialog modal-dialog-scrollable">
                     <div className="modal-content">
@@ -213,7 +215,16 @@ const Home: React.FC = () => {
                             <div className="row">
                                 <div className="col-sm-6 col-md-4 d-flex justify-content-around align-items-center">
                                     <div className="user-profile-image">
-                                        {getUser?getUser.avatar!="":"0"}
+                                        <img className="" style={{
+                                            height: "200px",
+                                            width: "200px",
+                                            backgroundSize: "cover",
+                                            objectFit: "cover",
+                                            borderRadius: "50%",
+                                            backgroundPosition: "center",
+                                        }} src={getUser && getUser.avatar != "" ? getUser.avatar : "0"}
+                                             alt={getUser.name}/>
+
                                     </div>
                                 </div>
                                 <div className="col-sm-6 col-md-8"></div>

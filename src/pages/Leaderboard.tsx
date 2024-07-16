@@ -6,26 +6,8 @@ import Breadcrumbs from "@mui/material/Breadcrumbs";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import {useEffect, useState} from "react";
 import axios from "axios";
-
-interface IUser {
-    name: string;
-    email: string;
-    password: string;
-    role: string;
-    id: number;
-    results?: { [key: string]: boolean };
-}
-
-interface ITask {
-    id: number;
-    departmentId: number;
-    text: string;
-    examples: string[];
-    fun_name: string;
-    solved: boolean;
-    check: string[];
-    answers: number[];
-}
+import {ITask, IUser} from "../Functions/interface.ts";
+import generateAvatar from "../Functions/avatarGenerator.ts";
 
 function Leaderboard() {
     const [users, setUsers] = useState<IUser[]>([]);
@@ -39,7 +21,7 @@ function Leaderboard() {
                 setUsers(resUsers.data);
                 setTasks(resTasks.data);
             } catch (error) {
-                console.log(error);
+                console.error(error);
             }
         };
 
@@ -64,13 +46,15 @@ function Leaderboard() {
     const ranks = (num: number) => {
         switch (num) {
             case 1:
-                return "🥇"
+                return "🥇";
             case 2:
-                return "🥈"
+                return "🥈";
             case 3:
-                return "🥉"
+                return "🥉";
+            default:
+                return num;
         }
-    }
+    };
 
     return (
         <section id="home" className="container py-3">
@@ -94,7 +78,7 @@ function Leaderboard() {
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>Name</th>
+                    <th className="text-start">Name</th>
                     <th>All tasks</th>
                     <th>Tasks solved</th>
                     <th>Tasks left</th>
@@ -111,7 +95,42 @@ function Leaderboard() {
                     return (
                         <tr key={user.id}>
                             <td>{index < 3 ? ranks(index + 1) : index + 1}</td>
-                            <td>{user.name}</td>
+                            <td className="text-start d-flex justify-content-start align-items-center gap-2">
+                                <span>
+                                    {user.avatar ? (
+                                        <img
+                                            style={{
+                                                width: "35px",
+                                                height: "35px",
+                                                borderRadius: "50%",
+                                                objectFit: "cover",
+                                                objectPosition: "center",
+                                            }}
+                                            src={user.avatar}
+                                            alt=""
+                                        />
+                                    ) : (
+                                        <img
+                                            style={{
+                                                width: "35px",
+                                                height: "35px",
+                                                borderRadius: "50%",
+                                                objectFit: "cover",
+                                                objectPosition: "center",
+                                            }}
+                                            src={generateAvatar({
+                                                width: 30,
+                                                height: 30,
+                                                name: user.name,
+                                                background: "#444",
+                                            })}
+                                            alt=""
+                                        />
+                                    )}
+                                </span>
+                                {user.name}
+                            </td>
+
                             <td>{totalTasks}</td>
                             <td>{solvedTasks}</td>
                             <td>{tasksLeft}</td>
