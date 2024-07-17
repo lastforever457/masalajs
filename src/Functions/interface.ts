@@ -1,4 +1,4 @@
-export interface IGenerateAva{
+export interface IGenerateAva {
     width: number;
     height: number;
     name: string;
@@ -11,8 +11,9 @@ export interface IUser {
     password: string;
     role: string;
     id: number;
-    results?: { [key: string]: boolean };
-    avatar: string;
+    notifications: INotification[];
+    results: { [key: string]: boolean };
+    avatar: string
 }
 
 export interface ITask {
@@ -24,4 +25,17 @@ export interface ITask {
     solved: boolean;
     check: string[];
     answers: number[];
+}
+
+export interface INotification {
+    id: number;
+    text: string;
+    color: "primary" | "secondary" | "success" | "info" | "warning" | "error" | "danger" | "light" | "dark";
+    users: { id: number };
+    date: string;
+}
+
+export interface IDepartment {
+    id: number;
+    title: string;
 }

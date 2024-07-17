@@ -1,5 +1,3 @@
-import {MdLeaderboard} from "react-icons/md";
-import {ImExit} from "react-icons/im";
 import {Link} from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
@@ -54,16 +52,12 @@ function Leaderboard() {
             default:
                 return num;
         }
-    };
+    }
 
     return (
         <section id="home" className="container py-3">
-            <div className="home-header d-flex justify-content-between align-items-center">
+            <div className="home-header d-flex justify-content-start align-items-center">
                 <p id="main-title" className="p-0 m-0">masala.js</p>
-                <div className="main-actions d-flex justify-content-center align-items-center gap-2">
-                    <button className="btn fs-5"><MdLeaderboard/></button>
-                    <button className="btn text-light fs-5"><ImExit/></button>
-                </div>
             </div>
             <p className="fs-5 text-secondary">
                 JavaScript dasturlash tiliga oid turli qiyinlikdagi masalalar

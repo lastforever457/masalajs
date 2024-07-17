@@ -1,6 +1,7 @@
-import { IGenerateAva } from "./interface.ts";
+import {IGenerateAva} from "./interface.ts";
 
 const generateAvatar = (props: IGenerateAva): string => {
+    if (!props.name) return '';
     const canvas = document.createElement("canvas") as HTMLCanvasElement;
     const context = canvas.getContext("2d");
 

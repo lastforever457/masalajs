@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {FC, useEffect, useState} from 'react';
 import {GiSandsOfTime} from "react-icons/gi";
 import {ImExit} from "react-icons/im";
 import {MdLeaderboard, MdNotificationsActive} from "react-icons/md";
@@ -9,51 +9,39 @@ import {GrUserAdmin} from "react-icons/gr";
 import axios from "axios";
 import {IoEllipsisVerticalSharp} from "react-icons/io5";
 import {FaRegUserCircle} from "react-icons/fa";
+import {INotification, ITask, IUser, IDepartment} from "../Functions/interface.ts";
+import generateAvatar from "../Functions/avatarGenerator.ts";
+import {FaDownload, FaEdit} from "react-icons/fa";
+import {FaDeleteLeft} from "react-icons/fa6";
+import Modal from "@mui/material/Modal";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
 
-interface IDepartment {
-    id: number;
-    title: string;
-}
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+};
 
-interface ITask {
-    id: number;
-    departmentId: number;
-    text: string;
-    examples: string[];
-    fun_name: string;
-    solved: boolean;
-    check: string[];
-    answers: number[];
-}
 
-interface INotification {
-    id: number;
-    text: string;
-    color: "primary" | "secondary" | "success" | "info" | "warning" | "error" | "danger" | "light" | "dark";
-    users: { id: number };
-    date: string;
-}
-
-interface IUser {
-    name: string;
-    email: string;
-    password: string;
-    role: string;
-    id: number;
-    notifications: INotification[];
-    results: { [key: string]: boolean };
-    avatar: string
-}
-
-const Home: React.FC = () => {
+const Home: FC = () => {
     const navigate = useNavigate();
     const {checkLogin} = useLogin();
     const {departments, getDepartments} = useDepartments();
-
     const getUser: IUser = JSON.parse(localStorage.getItem("token") || "{}");
     const [user, setUser] = useState<IUser>(getUser);
     const [notifications, setNotifications] = useState<INotification[] | null>(null);
     const [tasks, setTasks] = useState<ITask[] | null>(null);
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -99,6 +87,8 @@ const Home: React.FC = () => {
             });
         }
     };
+    const solvedTasksCount = user.results ? Object.keys(user.results).length : 0;
+
 
     return (
         <section id="home" className="container py-3">
@@ -214,20 +204,67 @@ const Home: React.FC = () => {
                         <div className="modal-body">
                             <div className="row">
                                 <div className="col-sm-6 col-md-4 d-flex justify-content-around align-items-center">
-                                    <div className="user-profile-image">
-                                        <img className="" style={{
-                                            height: "200px",
-                                            width: "200px",
-                                            backgroundSize: "cover",
-                                            objectFit: "cover",
-                                            borderRadius: "50%",
-                                            backgroundPosition: "center",
-                                        }} src={getUser && getUser.avatar != "" ? getUser.avatar : "0"}
-                                             alt={getUser.name}/>
-
+                                    <div
+                                        className="user-image d-flex flex-column justify-content-center align-items-center gap-3">
+                                        <div className="user-profile-image">
+                                            {user.avatar ? (
+                                                <img
+                                                    style={{
+                                                        width: "150px",
+                                                        height: "150px",
+                                                        borderRadius: "50%",
+                                                        objectFit: "cover",
+                                                        objectPosition: "center",
+                                                    }}
+                                                    src={user.avatar}
+                                                    alt={user.name}
+                                                />
+                                            ) : (
+                                                <img
+                                                    style={{
+                                                        width: "150px",
+                                                        height: "150px",
+                                                        borderRadius: "50%",
+                                                        objectFit: "cover",
+                                                        objectPosition: "center",
+                                                    }}
+                                                    src={generateAvatar({
+                                                        width: 30,
+                                                        height: 30,
+                                                        name: getUser.name,
+                                                        background: "#444",
+                                                    })}
+                                                    alt={user.name}
+                                                />
+                                            )}
+                                        </div>
+                                        <div className="input-group d-flex justify-content-center align-items-center">
+                                            <button className="btn btn-primary border-black disabled"><FaDownload/>
+                                            </button>
+                                            <button onClick={handleOpen} className="btn btn-primary border-black">
+                                                <FaEdit/></button>
+                                            <button onClick={handleOpen} className="btn btn-primary border-black">
+                                                <FaDeleteLeft/></button>
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="col-sm-6 col-md-8"></div>
+                                <div className="col-sm-6 col-md-8">
+                                    <div
+                                        className="user-info d-flex flex-column justify-content-center align-items-center gap-3">
+                                        <div className="user-name d-flex center align-items-center p-5">
+                                            <input type="text" id="user-profile-name-input" defaultValue={user.name}/>
+                                        </div>
+                                        <div
+                                            className="user-stats d-flex flex-column justify-content-evenly align-items-center gap-3">
+                                            <div className="user-stats-solved">
+                                                {solvedTasksCount}
+                                            </div>
+                                            <div className="user-stats-comment"></div>
+                                            <div className="user-stats-rating"></div>
+                                            <div className="user-stats-contest"></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div className="modal-footer">
@@ -237,6 +274,21 @@ const Home: React.FC = () => {
                     </div>
                 </div>
             </div>
+            <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={style}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                        Text in a modal
+                    </Typography>
+                    <Typography id="modal-modal-description" sx={{mt: 2}}>
+                        Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+                    </Typography>
+                </Box>
+            </Modal>
         </section>
     );
 };
