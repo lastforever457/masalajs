@@ -81,13 +81,13 @@ function Contest() {
             document.querySelector<HTMLFormElement>("#newContestForm");
         const getContestTasksSelectForm: HTMLFormElement | null =
             document.querySelector("#contestTasksSelectForm");
-        const checkedValues: number[] = [];
+        const checkedValues: string[] = [];
 
         if (getContestTasksSelectForm) {
             const formData = new FormData(getContestTasksSelectForm);
 
             formData.forEach((value) => {
-                checkedValues.push(parseInt(value) as number);
+                checkedValues.push(value as string);
             });
 
             console.log(checkedValues);
