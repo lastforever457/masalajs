@@ -16,6 +16,7 @@ import Departments from "./pages/Admin/AdminPages/Departments.tsx";
 import Tasks from "./pages/Admin/AdminPages/Tasks.tsx";
 import Users from "./pages/Admin/AdminPages/Users.tsx";
 import Contest from "./pages/Admin/AdminPages/Contest.tsx";
+import Contests from "./pages/Contests.tsx";
 
 const App = () => {
 
@@ -39,6 +40,7 @@ const App = () => {
                 <Route path="/tasks" element={<TaskPage/>}/>
                 <Route path="/tasks/task" element={<Task/>}/>
                 <Route path="/leaderboard" element={<Leaderboard/>}/>
+                <Route path="/contests" element={<Contests/>}/>
                 <Route path="/admin" element={<Admin/>}>
                     <Route path="users" element={<Users/>}/>
                     <Route path="tasks" element={<Tasks/>}/>

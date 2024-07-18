@@ -17,6 +17,7 @@ import {FaDeleteLeft} from "react-icons/fa6";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
+import {HiMiniTrophy} from "react-icons/hi2";
 
 const style = {
     position: 'absolute',
@@ -75,7 +76,7 @@ const Home: FC = () => {
         const ul: HTMLUListElement | null = document.querySelector("#messagesModal ul");
         if (ul && notifications) {
             ul.innerHTML = "";
-            notifications.forEach((notification) => {
+            notifications.reverse().forEach((notification) => {
                 const li = document.createElement("li");
                 li.className = "list-group-item d-flex justify-content-between align-items-center";
                 li.innerHTML = `
@@ -116,7 +117,9 @@ const Home: FC = () => {
         }
     };
 
-    console.log(user)
+    const handleClickContestBtn = () => {
+        navigate("/contests")
+    }
 
     return (
         <section id="home" className="container py-3">
@@ -139,8 +142,13 @@ const Home: FC = () => {
                                 </li>)
                                 : (<li data-bs-target="#messagesModal" data-bs-toggle="modal"
                                        className="dropdown-item d-flex justify-content-start align-items-center gap-2"
-                                       onClick={handleOpenNotifications}><MdNotificationsActive/> Xabarlar</li>)
+                                       onClick={handleOpenNotifications}><MdNotificationsActive/> Xabarlar</li>
+                                )
                             }
+                            <li onClick={handleClickContestBtn}
+                                className="dropdown-item d-flex justify-content-start align-items-center gap-2"
+                            ><HiMiniTrophy/> Turnirlar
+                            </li>
                             <li className="dropdown-item d-flex justify-content-start align-items-center gap-2"
                                 onClick={openLeaderboards}><MdLeaderboard/> Reyting
                             </li>
@@ -211,8 +219,7 @@ const Home: FC = () => {
                             <ul className="d-flex flex-column list-group list-group-flush"></ul>
                         </div>
                         <div className="modal-footer">
-                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" className="btn btn-primary">Barchasini yopish</button>
+                            <button type="button" className="btn btn-secondary" data-bs-dismiss="modal">Yopish</button>
                         </div>
                     </div>
                 </div>

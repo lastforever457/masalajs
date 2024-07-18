@@ -144,6 +144,41 @@ section {
     color: #fff;
 }
 
+.contest-register-btn {
+    height: auto;
+    background: black;
+    color: white;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.contest-register-btn:hover {
+    color: black;
+}
+
+.contest-register-btn:after {
+    content: "";
+    background: white;
+    position: absolute;
+    z-index: -1;
+    left: -20%;
+    right: -20%;
+    top: 0;
+    bottom: 0;
+    transform: skewX(-45deg) scale(0, 1);
+    transition: all 0.5s;
+}
+
+.contest-register-btn:hover:after {
+    transform: skewX(-45deg) scale(1, 1);
+    -webkit-transition: all 0.5s;
+    transition: all 0.5s;
+}
+
 @media screen and (max-width: 760px) {
     .codeground {
         padding: 0;

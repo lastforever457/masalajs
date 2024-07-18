@@ -1,12 +1,13 @@
-import { Accordion, AccordionDetails, AccordionSummary } from "@mui/material";
+import {Accordion, AccordionDetails, AccordionSummary} from "@mui/material";
 import Button from "@mui/material/Button";
-import { GridExpandMoreIcon } from "@mui/x-data-grid";
+import {GridExpandMoreIcon} from "@mui/x-data-grid";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import "react-datepicker/dist/react-datepicker.css";
-import { BiPlus } from "react-icons/bi";
-import { IContest, ITask, IUser } from "../../../Functions/interface.ts";
-import { handleSendMessage } from "../../../Functions/sendNotification.ts";
+import {BiPlus} from "react-icons/bi";
+import {IContest, ITask, IUser} from "../../../Functions/interface.ts";
+import {handleSendMessage} from "../../../Functions/sendNotification.ts";
+import {generateStatus, generateTheme} from "../../../Functions/functions.tsx";
 
 function Contest() {
     const [contests, setContests] = useState<IContest[]>([]);
@@ -38,25 +39,7 @@ function Contest() {
         fetchContests();
     }, []);
 
-    const generateTheme = (status: string) => {
-        if (status === "active") {
-            return "success";
-        } else if (status === "finished") {
-            return "secondary";
-        } else if (status === "registering") {
-            return "warning";
-        }
-    };
 
-    const generateStatus = (status: string) => {
-        if (status === "active") {
-            return "Boshlandi";
-        } else if (status === "finished") {
-            return "Tugadi";
-        } else if (status === "registering") {
-            return "Tez orada boshlanadi";
-        }
-    };
 
     const handleSearchTask = () => {
         const searchInput =
@@ -87,8 +70,6 @@ function Contest() {
             formData.forEach((value) => {
                 checkedValues.push(value as string);
             });
-
-            console.log(checkedValues);
         }
 
         if (newContestForm) {
@@ -104,12 +85,11 @@ function Contest() {
                 users: [],
             };
             try {
-                //@ts-ignore
                 await axios.post(
                     "https://f7f2aac439c74f02.mokky.dev/contests",
                     data
                 );
-                handleSendMessage("Yangi turnir e'lon qilindi", users);
+                handleSendMessage(`Yangi turnir e'lon qilindi (${data.name})`, users);
                 console.log(data);
             } catch (e) {
                 console.log(e);
@@ -127,171 +107,171 @@ function Contest() {
                     data-bs-toggle="modal"
                     className=""
                 >
-                    <BiPlus />
+                    <BiPlus/>
                     Yaratish
                 </Button>
             </div>
-            <hr />
+            <hr/>
             <div className="contests-body">
                 {contests
                     ? contests.map((contest, index) => {
-                          const registeredUsersArr: IUser[] = [];
-                          contest.users.map((usr) => {
-                              const registeredUsers = users.find(
-                                  (user) => user.id === usr
-                              );
-                              if (registeredUsers) {
-                                  registeredUsersArr.push(registeredUsers);
-                              }
-                          });
+                        const registeredUsersArr: IUser[] = [];
+                        contest.users.map((usr) => {
+                            const registeredUsers = users.find(
+                                (user) => user.id === usr
+                            );
+                            if (registeredUsers) {
+                                registeredUsersArr.push(registeredUsers);
+                            }
+                        });
 
-                          return (
-                              <Accordion
-                                  className={`contest-item alert alert-${generateTheme(
-                                      contest.status
-                                  )} `}
-                                  key={index}
-                              >
-                                  <AccordionSummary
-                                      expandIcon={<GridExpandMoreIcon />}
-                                      aria-controls="panel1-content"
-                                      id="panel1-header"
-                                  >
-                                      <div
-                                          style={{ width: "96%" }}
-                                          className="d-flex justify-content-between align-items-center accordion-head"
-                                      >
-                                          <h2 className="fs-4 fw-bold p-0 m-0">
-                                              {index + 1}) {contest.name}
-                                          </h2>
-                                          <div
-                                              className={`alert m-0 p-1 d-flex justify-content-center align-items-center alert-${generateTheme(
-                                                  contest.status
-                                              )}`}
-                                          >
-                                              {generateStatus(contest.status)}
-                                          </div>
-                                      </div>
-                                  </AccordionSummary>
-                                  <AccordionDetails>
-                                      <div
-                                          style={{ minHeight: "200px" }}
-                                          className="contest-body"
-                                      >
-                                          <div className="row">
-                                              <div className="col-sm-6 col-md-4 col-lg-3">
-                                                  <div className="contest-passport">
-                                                      <table className="table table-bordered">
-                                                          <tbody>
-                                                              <tr>
-                                                                  <td>Name</td>
-                                                                  <td>
-                                                                      {
-                                                                          contest.name
-                                                                      }
-                                                                  </td>
-                                                              </tr>
-                                                              <tr>
-                                                                  <td>
-                                                                      Start:
-                                                                  </td>
-                                                                  <td>
-                                                                      {
-                                                                          contest.startDate
-                                                                      }{" "}
-                                                                      |{" "}
-                                                                      {
-                                                                          contest.startTime
-                                                                      }
-                                                                  </td>
-                                                              </tr>
-                                                              <tr>
-                                                                  <td>
-                                                                      Finish:
-                                                                  </td>
-                                                                  <td>
-                                                                      {
-                                                                          contest.finishDate
-                                                                      }{" "}
-                                                                      |{" "}
-                                                                      {
-                                                                          contest.finishTime
-                                                                      }
-                                                                  </td>
-                                                              </tr>
-                                                              <tr>
-                                                                  <td>
-                                                                      Selected
-                                                                      tasks
-                                                                  </td>
-                                                                  <td>
-                                                                      {
-                                                                          contest
-                                                                              .tasks
-                                                                              .length
-                                                                      }
-                                                                  </td>
-                                                              </tr>
-                                                              <tr>
-                                                                  <td>
-                                                                      Registered
-                                                                      users
-                                                                  </td>
-                                                                  <td>
-                                                                      {
-                                                                          contest
-                                                                              .users
-                                                                              .length
-                                                                      }
-                                                                  </td>
-                                                              </tr>
-                                                          </tbody>
-                                                      </table>
-                                                  </div>
-                                              </div>
-                                              {contest.status === "started" ||
-                                              contest.status === "finished" ? (
-                                                  <div className="col-sm-6 col-md-4 col-lg-3">
-                                                      <div className="tasks-selection">
-                                                          <h3>
-                                                              Selected tasks
-                                                          </h3>
-                                                      </div>
-                                                  </div>
-                                              ) : (
-                                                  ""
-                                              )}
-                                              <div className="col-sm-6 col-md-4 col-lg-3">
-                                                  <div className="registered-users d-flex">
-                                                      <h3>Registered users</h3>
-                                                      <div className="users-list">
-                                                          <ul className="list-group list-group-flush bg-transparent">
-                                                              {registeredUsersArr.map(
-                                                                  (user) => {
-                                                                      return (
-                                                                          <li
-                                                                              key={
-                                                                                  user.id
-                                                                              }
-                                                                              className="list-group-item"
-                                                                          >
-                                                                              {
-                                                                                  user.name
-                                                                              }
-                                                                          </li>
-                                                                      );
-                                                                  }
-                                                              )}
-                                                          </ul>
-                                                      </div>
-                                                  </div>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </AccordionDetails>
-                              </Accordion>
-                          );
-                      })
+                        return (
+                            <Accordion
+                                className={`contest-item alert alert-${generateTheme(
+                                    contest.status
+                                )} `}
+                                key={index}
+                            >
+                                <AccordionSummary
+                                    expandIcon={<GridExpandMoreIcon/>}
+                                    aria-controls="panel1-content"
+                                    id="panel1-header"
+                                >
+                                    <div
+                                        style={{width: "96%"}}
+                                        className="d-flex justify-content-between align-items-center accordion-head"
+                                    >
+                                        <h2 className="fs-4 fw-bold p-0 m-0">
+                                            {index + 1}) {contest.name}
+                                        </h2>
+                                        <div
+                                            className={`alert m-0 p-1 d-flex justify-content-center align-items-center alert-${generateTheme(
+                                                contest.status
+                                            )}`}
+                                        >
+                                            {generateStatus(contest.status)}
+                                        </div>
+                                    </div>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                    <div
+                                        style={{minHeight: "200px"}}
+                                        className="contest-body"
+                                    >
+                                        <div className="row">
+                                            <div className="col-sm-6 col-md-4 col-lg-3">
+                                                <div className="contest-passport">
+                                                    <table className="table table-bordered">
+                                                        <tbody>
+                                                        <tr>
+                                                            <td>Name</td>
+                                                            <td>
+                                                                {
+                                                                    contest.name
+                                                                }
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                Start:
+                                                            </td>
+                                                            <td>
+                                                                {
+                                                                    contest.startDate
+                                                                }{" "}
+                                                                |{" "}
+                                                                {
+                                                                    contest.startTime
+                                                                }
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                Finish:
+                                                            </td>
+                                                            <td>
+                                                                {
+                                                                    contest.finishDate
+                                                                }{" "}
+                                                                |{" "}
+                                                                {
+                                                                    contest.finishTime
+                                                                }
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                Selected
+                                                                tasks
+                                                            </td>
+                                                            <td>
+                                                                {
+                                                                    contest
+                                                                        .tasks
+                                                                        .length
+                                                                }
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                Registered
+                                                                users
+                                                            </td>
+                                                            <td>
+                                                                {
+                                                                    contest
+                                                                        .users
+                                                                        .length
+                                                                }
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            {contest.status === "started" ||
+                                            contest.status === "finished" ? (
+                                                <div className="col-sm-6 col-md-4 col-lg-3">
+                                                    <div className="tasks-selection">
+                                                        <h3>
+                                                            Selected tasks
+                                                        </h3>
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                ""
+                                            )}
+                                            <div className="col-sm-6 col-md-4 col-lg-3">
+                                                <div className="registered-users d-flex">
+                                                    <h3>Registered users</h3>
+                                                    <div className="users-list">
+                                                        <ul className="list-group list-group-flush bg-transparent">
+                                                            {registeredUsersArr.map(
+                                                                (user) => {
+                                                                    return (
+                                                                        <li
+                                                                            key={
+                                                                                user.id
+                                                                            }
+                                                                            className="list-group-item"
+                                                                        >
+                                                                            {
+                                                                                user.name
+                                                                            }
+                                                                        </li>
+                                                                    );
+                                                                }
+                                                            )}
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </AccordionDetails>
+                            </Accordion>
+                        );
+                    })
                     : ""}
             </div>
             <div
@@ -410,7 +390,8 @@ function Contest() {
                                                         className="list-group-item"
                                                     >
                                                         <div className="d-flex start align-items-center">
-                                                            <div className="d-flex justify-content-start align-items-center gap-2">
+                                                            <div
+                                                                className="d-flex justify-content-start align-items-center gap-2">
                                                                 <input
                                                                     type="checkbox"
                                                                     className="form-check-input me-2"
