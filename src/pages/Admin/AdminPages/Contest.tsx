@@ -6,8 +6,7 @@ import { useEffect, useState } from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import { BiPlus } from "react-icons/bi";
 import { IContest, ITask, IUser } from "../../../Functions/interface.ts";
-
-// import {handleSendMessage} from "../../../Functions/sendNotification.ts";
+import { handleSendMessage } from "../../../Functions/sendNotification.ts";
 
 function Contest() {
     const [contests, setContests] = useState<IContest[]>([]);
@@ -104,8 +103,17 @@ function Contest() {
                 tasks: checkedValues,
                 users: [],
             };
-            // handleSendMessage("Yangi turnir e'lon qilindi", users)
-            console.log(data);
+            try {
+                //@ts-ignore
+                await axios.post(
+                    "https://f7f2aac439c74f02.mokky.dev/contests",
+                    data
+                );
+                handleSendMessage("Yangi turnir e'lon qilindi", users);
+                console.log(data);
+            } catch (e) {
+                console.log(e);
+            }
         }
     };
 
