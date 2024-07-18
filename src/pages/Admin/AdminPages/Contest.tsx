@@ -59,7 +59,7 @@ function Contest() {
         }
     };
 
-    const handleSearchTask = (event: MouseEvent) => {
+    const handleSearchTask = (event: Event) => {
         event.preventDefault();
         const searchInput =
             document.querySelector<HTMLInputElement>("#search-task-input");
