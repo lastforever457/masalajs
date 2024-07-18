@@ -39,3 +39,16 @@ export interface IDepartment {
     id: number;
     title: string;
 }
+
+export interface IContest {
+    id: number;
+    name: string;
+    startDate: string;
+    startTime: string;
+    finishDate: string;
+    finishTime: string;
+    status: "registering" | "started" | "finished";
+    users: number[];
+    tasks: number[];
+    winner: number;
+}

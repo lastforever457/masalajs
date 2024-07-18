@@ -1,3 +1,4 @@
+import Swal from "sweetalert2"
 import {FC, useEffect, useState} from 'react';
 import {GiSandsOfTime} from "react-icons/gi";
 import {ImExit} from "react-icons/im";
@@ -89,6 +90,33 @@ const Home: FC = () => {
     };
     const solvedTasksCount = user.results ? Object.keys(user.results).length : 0;
 
+    const deleteUserAvatar = async () => {
+        setOpen(true)
+        try {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            //@ts-expect-error
+            Swal.fire({
+                title: "Profilingizdagi avatarni o'chirmoqchimisiz?",
+                theme: "warning",
+                showCancelButton: true,
+                confirmButtonText: "O'chirish",
+                denyButtonText: `Don't save`,
+                cancelButtonText: "Bekor qilish",
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    await axios.patch(`https://f7f2aac439c74f02.mokky.dev/user?id=${user.id}`, {
+                        ...user, avatar: ""
+                    });
+                    await Swal.fire("O'chirildi!", "", "success");
+                }
+            });
+            setUser({...user, avatar: ""});
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    console.log(user)
 
     return (
         <section id="home" className="container py-3">
@@ -243,7 +271,7 @@ const Home: FC = () => {
                                             </button>
                                             <button onClick={handleOpen} className="btn btn-primary border-black">
                                                 <FaEdit/></button>
-                                            <button onClick={handleOpen} className="btn btn-primary border-black">
+                                            <button onClick={deleteUserAvatar} className="btn btn-primary border-black">
                                                 <FaDeleteLeft/></button>
                                         </div>
                                     </div>
