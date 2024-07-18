@@ -59,8 +59,7 @@ function Contest() {
         }
     };
 
-    const handleSearchTask = (event: Event) => {
-        event.preventDefault();
+    const handleSearchTask = () => {
         const searchInput =
             document.querySelector<HTMLInputElement>("#search-task-input");
         if (searchInput) {
