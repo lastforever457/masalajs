@@ -1,9 +1,9 @@
 export const generateTheme = (status: string) => {
-    if (status === "active") {
+    if (status === "Boshlandi") {
         return "success";
-    } else if (status === "finished") {
+    } else if (status === "Tugadi") {
         return "secondary";
-    } else if (status === "registering") {
+    } else if (status === "Registering") {
         return "warning";
     }
 };
