@@ -8,10 +8,12 @@ import {Link} from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import {toast} from "react-toastify";
 
 function Contests() {
     const [contests, setContests] = useState<IContest[]>([]);
     const [users, setUsers] = useState<IUser[]>([]);
+    const getUser: IUser = JSON.parse(localStorage.getItem("token") || "{}");
 
     useEffect(() => {
         const fetchContests = async () => {
@@ -39,7 +41,7 @@ function Contests() {
         <Typography className="fs-5 text-light" key="2">
             Turnirlar
         </Typography>
-    ];
+    ]
 
     return (
         <section id="home" className="container py-3">
@@ -74,12 +76,45 @@ function Contests() {
                             }
                         });
 
+                        const registerBtn: HTMLButtonElement | null = document.querySelector(".contest-register-btn")
+
+
+                        const handleRegisterToContest = async () => {
+                            try {
+                                await axios.patch(
+                                    `https://f7f2aac439c74f02.mokky.dev/contests/${contest.id}`,
+                                    {
+                                        ...contest,
+                                        users: [
+                                            ...contest.users, getUser.id
+                                        ]
+                                    }
+                                );
+                                toast.success(`Ro'yxatdan o'tdingiz !`, {
+                                    position: "top-right",
+                                    autoClose: 3000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    theme: "dark",
+                                });
+                            } catch (error) {
+                                console.log(error)
+                            }
+                        }
+
+                        if (registerBtn) {
+                            registerBtn.addEventListener("click", handleRegisterToContest);
+                        }
+
                         return (
                             <Accordion
                                 className={`contest-item alert alert-${generateTheme(
                                     contest.status
                                 )} `}
-                                key={index}
+                                key={contest.id}
                             >
                                 <AccordionSummary
                                     expandIcon={<GridExpandMoreIcon/>}
@@ -94,7 +129,10 @@ function Contests() {
                                             {index + 1}) {contest.name}
                                         </h2>
                                         <div className="right d-flex gap-3">
-                                            <button className={`btn contest-register-btn btn-outlined-${generateTheme(contest.status)}`}>Ro'yxatdan o'tish</button>
+                                            <button data-id={contest.id} onClick={handleRegisterToContest}
+                                                    className={`btn contest-register-btn contest-register-btn-${contest.id} btn-outlined-${generateTheme(contest.status)}`}>Ro'yxatdan
+                                                o'tish
+                                            </button>
                                             <div
                                                 className={`alert m-0 p-1 d-flex justify-content-center align-items-center alert-${generateTheme(
                                                     contest.status
