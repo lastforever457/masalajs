@@ -9,11 +9,17 @@ import Typography from "@mui/material/Typography";
 import Breadcrumbs from "@mui/material/Breadcrumbs";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import {toast} from "react-toastify";
+import useCheckContest from "../Functions/UseCheckContest.tsx";
 
 function Contests() {
     const [contests, setContests] = useState<IContest[]>([]);
     const [users, setUsers] = useState<IUser[]>([]);
     const getUser: IUser = JSON.parse(localStorage.getItem("token") || "{}");
+    const {checkContest} = useCheckContest();
+
+    useEffect(() => {
+        checkContest();
+    }, [checkContest]);
 
     useEffect(() => {
         const fetchContests = async () => {

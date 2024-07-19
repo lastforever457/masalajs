@@ -9,11 +9,11 @@ export const generateTheme = (status: string) => {
 };
 
 export const generateStatus = (status: string) => {
-    if (status === "active") {
+    if (status === "Boshlandi") {
         return "Boshlandi";
-    } else if (status === "finished") {
+    } else if (status === "Tugadi") {
         return "Tugadi";
-    } else if (status === "registering") {
+    } else if (status === "Registering") {
         return "Tez orada boshlanadi";
     }
 };
