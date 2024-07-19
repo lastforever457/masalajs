@@ -47,7 +47,7 @@ export interface IContest {
     startTime: string;
     finishDate: string;
     finishTime: string;
-    status: "registering" | "started" | "finished";
+    status: "Registering" | "Boshlandi" | "Tugadi";
     users: number[];
     tasks: number[];
     winner: number;

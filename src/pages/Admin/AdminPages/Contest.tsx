@@ -229,8 +229,8 @@ function Contest() {
                                                     </table>
                                                 </div>
                                             </div>
-                                            {contest.status === "started" ||
-                                            contest.status === "finished" ? (
+                                            {contest.status === "Boshlandi" ||
+                                            contest.status === "Tugadi" ? (
                                                 <div className="col-sm-6 col-md-4 col-lg-3">
                                                     <div className="tasks-selection">
                                                         <h3>

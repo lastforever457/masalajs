@@ -135,10 +135,11 @@ function Contests() {
                                             {index + 1}) {contest.name}
                                         </h2>
                                         <div className="right d-flex gap-3">
-                                            <button data-id={contest.id} onClick={handleRegisterToContest}
-                                                    className={`btn contest-register-btn contest-register-btn-${contest.id} btn-outlined-${generateTheme(contest.status)}`}>Ro'yxatdan
-                                                o'tish
-                                            </button>
+                                            {contest.status == "Registering" ? (
+                                                <button data-id={contest.id} onClick={handleRegisterToContest}
+                                                        className={`btn contest-register-btn contest-register-btn-${contest.id} btn-outlined-${generateTheme(contest.status)}`}>Ro'yxatdan
+                                                    o'tish
+                                                </button>) : ""}
                                             <div
                                                 className={`alert m-0 p-1 d-flex justify-content-center align-items-center alert-${generateTheme(
                                                     contest.status
@@ -223,8 +224,8 @@ function Contests() {
                                                     </table>
                                                 </div>
                                             </div>
-                                            {contest.status === "started" ||
-                                            contest.status === "finished" ? (
+                                            {contest.status === "Boshlandi" ||
+                                            contest.status === "Tugadi" ? (
                                                 <div className="col-md-6">
                                                     <div className="tasks-selection">
                                                         <h3>

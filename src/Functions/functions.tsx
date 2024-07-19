@@ -2,7 +2,7 @@ export const generateTheme = (status: string) => {
     if (status === "Boshlandi") {
         return "success";
     } else if (status === "Tugadi") {
-        return "secondary";
+        return "danger";
     } else if (status === "Registering") {
         return "warning";
     }
