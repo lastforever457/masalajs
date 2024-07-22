@@ -1,6 +1,6 @@
 import axios from "axios";
-import {useCallback} from "react";
-import {IContest} from "./interface.ts";
+import { useCallback } from "react";
+import { IContest } from "./interface.ts";
 
 const useCheckContest = () => {
     const checkContest = useCallback(async () => {
@@ -11,39 +11,40 @@ const useCheckContest = () => {
                 return [...new Set(array)];
             }
 
-            res.data.forEach((contest) => {
-                const checkEachContest = async () => {
+            const updateContestStatus = async (contest: IContest) => {
+                const contestStartDateTime = new Date(`${contest.startDate}T${contest.startTime}`);
+                const contestFinishDateTime = new Date(`${contest.finishDate}T${contest.finishTime}`);
+                const usersArr: number[] = removeDuplicates(contest.users);
+                const currentDateTime = new Date();
 
-                    const contestStartDateTime = new Date(`${contest.startDate}T${contest.startTime}`);
-                    const contestFinishDateTime = new Date(`${contest.finishDate}T${contest.finishTime}`);
-                    const usersArr: number[] = removeDuplicates(contest.users);
-                    const setStatusContest = async (status: string) => {
-                        await axios.patch(`https://f7f2aac439c74f02.mokky.dev/contests/${contest.id}`, {
-                            ...contest,
-                            users: usersArr,
-                            status: status,
-                        });
-                    }
+                let status: string;
 
-                    const currentDateTime = new Date();
-
-                    if (contestStartDateTime <= currentDateTime && contestFinishDateTime >= currentDateTime) {
-                        await setStatusContest("Boshlandi");
-                    } else if (contestFinishDateTime < currentDateTime) {
-                        await setStatusContest("Yakunlandi");
-                    }
+                if (contestStartDateTime <= currentDateTime && contestFinishDateTime >= currentDateTime) {
+                    status = "Boshlandi";
+                } else if (contestFinishDateTime < currentDateTime) {
+                    status = "Tugadi";
+                } else {
+                    status = "Registering";
                 }
 
-                checkEachContest()
-            });
+                if (status !== contest.status) {
+                    await axios.patch(`https://f7f2aac439c74f02.mokky.dev/contests/${contest.id}`, {
+                        ...contest,
+                        users: usersArr,
+                        status: status,
+                    });
+                }
+            }
 
+            // Barcha turnirlarni tekshirish
+            await Promise.all(res.data.map(updateContestStatus));
 
         } catch (error) {
-            console.log(error);
+            console.error('Xatolik yuz berdi:', error);
         }
     }, []);
 
-    return {checkContest};
+    return { checkContest };
 };
 
 export default useCheckContest;

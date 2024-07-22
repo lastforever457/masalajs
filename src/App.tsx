@@ -16,7 +16,7 @@ import Departments from "./pages/Admin/AdminPages/Departments.tsx";
 import Tasks from "./pages/Admin/AdminPages/Tasks.tsx";
 import Users from "./pages/Admin/AdminPages/Users.tsx";
 import Contest from "./pages/Admin/AdminPages/Contest.tsx";
-import Contests from "./pages/Contests.tsx";
+import Contests from "./pages/Contests/Contests.tsx";
 
 const App = () => {
 
